@@ -21,5 +21,14 @@
             "email": "info@garettrobson.co.uk"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "scripts": {
+        "test": "phpunit",
+        "lint":[
+            "@lint-src",
+            "@lint-tests"
+        ],
+        "lint-src": "php-cs-fixer fix src",
+        "lint-tests": "php-cs-fixer fix tests"
+    }
 }

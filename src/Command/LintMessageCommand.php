@@ -76,7 +76,7 @@ class LintMessageCommand extends Command
         if($path === null) {
             return null;
         }
-        return $filesystem->readFile($path);
+        return $this->filesystem->readFile($path);
     }
 
 }

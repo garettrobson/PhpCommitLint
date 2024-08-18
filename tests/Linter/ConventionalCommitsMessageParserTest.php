@@ -2,35 +2,41 @@
 
 declare(strict_types=1);
 
+namespace GarettRobson\PhpCommitLint\Tests\Linter;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use GarettRobson\PhpCommitLint\Linter\Message;
 use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
 
 #[CoversClass(ConventionalCommitsMessageParser::class)]
+#[CoversClass(Message::class)]
 final class ConventionalCommitsMessageParserTest extends TestCase
 {
     public function testParseSimpleMessage(): void
     {
         $testMessage = 'Initial commit';
 
-        $messageParser = new ConventionalCommitsMessageParser($testMessage);
+        $messageParser = new ConventionalCommitsMessageParser();
+        $message = $messageParser->parseMessage($testMessage);
 
-        $this->assertSame($testMessage, $messageParser->get('type'));
-        $this->assertFalse($messageParser->has('scope'));
-        $this->assertFalse($messageParser->has('breaking'));
-        $this->assertFalse($messageParser->has('description'));
+        $this->assertSame($testMessage, $message->get('type'));
+        $this->assertFalse($message->has('scope'));
+        $this->assertFalse($message->has('breaking'));
+        $this->assertSame('', $message->get('description'));
     }
 
     public function testParseCorrectMessage(): void
     {
         $testMessage = 'feat(user-auth): add multi-factor authentication';
 
-        $messageParser = new ConventionalCommitsMessageParser($testMessage);
+        $messageParser = new ConventionalCommitsMessageParser();
+        $message = $messageParser->parseMessage($testMessage);
 
-        $this->assertSame('feat', $messageParser->get('type'));
-        $this->assertSame('user-auth', $messageParser->get('scope'));
-        $this->assertFalse($messageParser->has('breaking'));
-        $this->assertSame('add multi-factor authentication', $messageParser->get('description'));
+        $this->assertSame('feat', $message->get('type'));
+        $this->assertSame('user-auth', $message->get('scope'));
+        $this->assertFalse($message->has('breaking'));
+        $this->assertSame('add multi-factor authentication', $message->get('description'));
     }
 
     public function testParseCompleteMessage(): void
@@ -58,11 +64,12 @@ BREAKING CHANGE: User login API response structure changed
 TEST_MESSAGE;
 
         $messageParser = new ConventionalCommitsMessageParser($testMessage);
+        $message = $messageParser->parseMessage($testMessage);
 
-        $this->assertSame('feat', $messageParser->get('type'));
-        $this->assertSame('user-auth', $messageParser->get('scope'));
-        $this->assertSame('!', $messageParser->get('breaking'));
-        $this->assertSame('add multi-factor authentication', $messageParser->get('description'));
-        $this->assertStringEndsWith($messageParser->get('body'), $testMessage);
+        $this->assertSame('feat', $message->get('type'));
+        $this->assertSame('user-auth', $message->get('scope'));
+        $this->assertSame('!', $message->get('breaking'));
+        $this->assertSame('add multi-factor authentication', $message->get('description'));
+        $this->assertStringEndsWith($message->get('body'), $testMessage);
     }
 }

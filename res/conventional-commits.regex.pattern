@@ -12,6 +12,6 @@
 	(?<description_separator>\s)?
 	(?<description>[^\n$]*)?
 )
-(?<body>.*)?
+(?<body>.+)?
 $
 /xs

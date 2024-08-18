@@ -6,9 +6,9 @@ namespace GarettRobson\PhpCommitLint\Linter;
 
 abstract class PatternLoadingMessageParser extends MessageParser
 {
-    public function __construct(string $message, string $patternPath, int $flags = PREG_UNMATCHED_AS_NULL)
+    public function __construct(string $patternPath, int $flags = PREG_UNMATCHED_AS_NULL)
     {
         $pattern = file_get_contents($patternPath);
-        parent::__construct($message, $pattern, $flags);
+        parent::__construct($pattern, $flags);
     }
 }

@@ -6,11 +6,8 @@ namespace GarettRobson\PhpCommitLint\Linter;
 
 class ConventionalCommitsMessageParser extends PatternLoadingMessageParser
 {
-    public function __construct(string $message)
+    public function __construct()
     {
-        parent::__construct(
-            $message,
-            __DIR__ . '/../../res/message-parse.regex.pattern'
-        );
+        parent::__construct(__DIR__ . '/../../res/conventional-commits.regex.pattern');
     }
 }

@@ -22,6 +22,9 @@
             "email": "info@garettrobson.co.uk"
         }
     ],
+    "bin": [
+        "php-commit-lint"
+    ],
     "minimum-stability": "stable",
     "scripts": {
         "test": "phpunit",

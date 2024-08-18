@@ -9,7 +9,6 @@ use GarettRobson\PhpCommitLint\Command\LintMessageCommand;
 
 class LintApplication extends Application
 {
-
     public function __construct()
     {
         parent::__construct('git-commit-lint', '0.0.0');

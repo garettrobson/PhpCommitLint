@@ -1,4 +1,4 @@
-feat(user-auth): add multi-factor authentication
+feat(user-auth): Add multi-factor authentication
 
 This commit introduces multi-factor authentication for user accounts.
 The new feature allows users to enable 2FA using either SMS or

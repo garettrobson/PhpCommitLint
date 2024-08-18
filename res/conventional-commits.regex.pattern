@@ -11,7 +11,7 @@
 	(?<colon>:)?
 	(?<description_separator>\s)?
 	(?<description>[^\n$]*)?
-)
+)\n?
 (?<body>.+)?
 $
 /xs

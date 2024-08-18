@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Tests\Linter;
 
-use \RuntimeException;
+use RuntimeException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use GarettRobson\PhpCommitLint\Linter\Message;

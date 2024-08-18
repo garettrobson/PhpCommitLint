@@ -36,12 +36,17 @@ git commit -m 'try(bad scope): a description that is too long, and will fail bec
 You should see output that looks similar to the following;
 
 ```
- [ERROR] Title exceeds 50 characters
- [ERROR] Type of try not allowed, must be one of: fix, feat, build, chore, ci,
-         docs, style, refactor, perf, test
- [ERROR] Scope "bad scope" does not conform to expected pattern: /^[\w-]+$/
- [ERROR] Description "a description that is too long, and will fail because of
-         numerous problems" does not conform to expected pattern: /^[A-Z0-9].*$/
 
+PHP Commit Lint
+===============
+
+The following errors occurred:
+- Title exceeds 50 characters
+- Type of try not allowed, must be one of: fix, feat, build, chore, ci, docs, style, refactor, perf, test
+- Scope "bad scope" does not conform to expected pattern: /^[\w-]+$/
+- Description "a description that is too long, and will fail because of numerous problems" does not conform to expected pattern: /^[A-Z0-9].*$/
+
+
+ [ERROR] Commit message failed linting
 
 ```

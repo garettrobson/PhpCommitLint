@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Linter;
 
-class ConventionalCommitsMessageParser extends MessageParser
+class ConventionalCommitsMessageParser extends PatternLoadingMessageParser
 {
-    public function __construct(string $message, int $flags = PREG_UNMATCHED_AS_NULL)
+    public function __construct(string $message)
     {
-        $pattern = file_get_contents(__DIR__ . '/../../res/message-parse.regex.pattern');
-        parent::__construct($message, $pattern, $flags);
+        parent::__construct(
+            $message,
+            __DIR__ . '/../../res/message-parse.regex.pattern'
+        );
     }
 }

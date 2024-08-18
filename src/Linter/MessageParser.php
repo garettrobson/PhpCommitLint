@@ -6,7 +6,7 @@ namespace GarettRobson\PhpCommitLint\Linter;
 
 use Psr\Container\ContainerInterface;
 
-class MessageParser implements ContainerInterface
+abstract class MessageParser implements ContainerInterface
 {
     protected array $matches = [];
 
@@ -24,7 +24,7 @@ class MessageParser implements ContainerInterface
     }
 
     /**
-     * Finds an match of the message by its identifier and returns it.
+     * Finds a match of the message by its identifier and returns it.
      *
      * @param string $id Identifier of the match to look for.
      *
@@ -39,7 +39,7 @@ class MessageParser implements ContainerInterface
     }
 
     /**
-     * Returns true if the message can return an match for the given identifier.
+     * Returns true if the message can return a match for the given identifier.
      * Returns false otherwise.
      *
      * `has($id)` returning true does not mean that `get($id)` will not throw an exception.

@@ -42,9 +42,9 @@ class LintMessageCommandTest extends TestCase
         ]);
 
         $commandTester->assertCommandIsSuccessful();
-
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('[OK] Message lint successful', $output);
+
+        $this->assertStringContainsString('[OK] Commit message passed linting', $output);
     }
 
     public function testExecuteWithInvalidFile(): void

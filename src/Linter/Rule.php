@@ -9,6 +9,7 @@ use GarettRobson\PhpCommitLint\Linter\Message;
 abstract class Rule
 {
     protected array $errors = [];
+
     /**
      * @return array<string>
      */
@@ -27,9 +28,18 @@ abstract class Rule
         return $this;
     }
 
-    public function addError(string $error)
+    public function addError(string $errorMessage, ...$arguments)
     {
-        $this->errors[] = $error;
+        $arguments = array_map(
+            fn ($val) => sprintf('<comment>%s</comment>', $val),
+            $arguments,
+        );
+
+        $this->errors[] = sprintf(
+            $errorMessage,
+            ...$arguments
+        );
+
         return $this;
     }
 

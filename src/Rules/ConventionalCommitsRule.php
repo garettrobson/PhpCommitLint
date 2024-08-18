@@ -32,25 +32,33 @@ class ConventionalCommitsRule extends Rule
         if(!$message->hasType()) {
             $this->addError('Message does not have a type');
         } elseif (!in_array($message->getType(), $this->typesAllowed, true)) {
-            $this->addError(sprintf(
-                'Type of %s not allowed, must be one of: %s',
+            $this->addError(
+                'Type of <info>%s</info> not allowed, must be one of: %s',
                 $message->getType(),
-                implode(', ', $this->typesAllowed)
-            ));
+                implode(', ', $this->typesAllowed),
+            );
         }
 
         if (
             $message->hasScope() &&
             !preg_match($this->scopePattern, $message->getScope())
         ) {
-            $this->addError(sprintf('Scope "%s" does not conform to expected pattern: %s', $message->getScope(), $this->scopePattern));
+            $this->addError(
+                'Scope "%s" does not conform to expected pattern: %s',
+                $message->getScope(),
+                $this->scopePattern
+            );
         }
 
         if (
             $message->hasDescription() &&
             !preg_match($this->descriptionPattern, $message->getDescription())
         ) {
-            $this->addError(sprintf('Description "%s" does not conform to expected pattern: %s', $message->getDescription(), $this->descriptionPattern));
+            $this->addError(
+                'Description "%s" does not conform to expected pattern: %s',
+                $message->getDescription(),
+                $this->descriptionPattern
+            );
         }
 
         return $this;

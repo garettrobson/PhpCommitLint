@@ -53,6 +53,7 @@ class LintMessageCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
+        $io->title('PHP Commit Lint');
         $messageText = $this->readFile($input->getArgument('file'));
 
         if(!$messageText) {
@@ -76,13 +77,19 @@ class LintMessageCommand extends Command
         $errors = $validator->validate($message);
 
         if($errors) {
+            $output->writeln("<error>The following errors occurred:</error>");
             foreach($errors as $error) {
-                $io->error($error);
+                $output->writeln(sprintf(
+                    '- %s',
+                    $error
+                ));
             }
+            $output->writeln('');
+            $io->error('Commit message failed linting');
             return static::FAILURE;
         }
 
-        $io->success('Message lint successful');
+        $io->success('Commit message passed linting');
         return static::SUCCESS;
     }
 

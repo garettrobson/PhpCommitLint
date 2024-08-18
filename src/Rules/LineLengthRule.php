@@ -43,7 +43,7 @@ class LineLengthRule extends Rule
             $message->hasTitle() &&
             (strlen($message->getTitle()) > $this->titleMaximumLength)
         ) {
-            $this->addError(sprintf('Title exceeds %s characters', $this->titleMaximumLength));
+            $this->addError('Title exceeds %s characters', $this->titleMaximumLength);
         }
 
         if (
@@ -52,7 +52,7 @@ class LineLengthRule extends Rule
         ) {
             foreach($body as $index => $line) {
                 if(strlen($line) > $this->bodyMaximumLength) {
-                    $this->addError(sprintf('Line %s line exceeds %s characters', $index + 1, $this->titleMaximumLength));
+                    $this->addError('Line %s line exceeds %s characters', $index + 1, $this->titleMaximumLength);
                 }
             }
         }

@@ -1,0 +1,17 @@
+/
+^
+(?<title>
+	(?<type>[^(:!]*)?
+	(?:
+		\(
+		(?<scope>[^)]*)
+		\)
+	)?
+	(?<breaking>!)?
+	(?<colon>:)?
+	(?<description_separator>\s)?
+	(?<description>[^\n$]*)?
+)
+(?<body>.*)?
+$
+/xs

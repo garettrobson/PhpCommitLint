@@ -49,21 +49,19 @@ HELP)
 
         $io = new SymfonyStyle($input, $output);
 
-        $io->title('PHP Commit Lint');
-        $messageText = $this->readFile($input->getArgument('file'));
+        $io->title('PHP Commit Lint: Message Lint');
 
+        $messageText = $this->readFile($input->getArgument('file'));
         if(!$messageText) {
             throw new Exception(sprintf(
                 'No message to parse'
             ));
         }
-
-        $io->writeln('<info>Message read:</info>', $io::VERBOSITY_VERY_VERBOSE);
+        $io->writeln('<info>Input Message:</info>', $io::VERBOSITY_VERY_VERBOSE);
         $io->writeln(sprintf('<comment>%s</comment>', $messageText), $io::VERBOSITY_VERY_VERBOSE);
 
         $messageParser = new ConventionalCommitsMessageParser();
         $message = $messageParser->parseMessage($messageText);
-
 
         $validator = new Validator();
         $validator

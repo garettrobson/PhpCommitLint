@@ -51,6 +51,6 @@ abstract class MessageParser implements ContainerInterface
      */
     public function has(string $id): bool
     {
-        return isset($this->matches[$id]) && $this->matches[$id];
+        return isset($this->matches[$id]);
     }
 }

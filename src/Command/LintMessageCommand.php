@@ -32,18 +32,14 @@ class LintMessageCommand extends Command
     {
         $this
             ->setDescription('Lint a commit message')
-            ->setHelp('Analyse a commit message and report errors')
+            ->setHelp(<<<HELP
+When installed as a composer dependency symlink the executable to <comment>commit-msg</comment> using:
+<info>ln -s ../../vendor/bin/php-commit-lint .git/hooks/commit-msg</info>
+HELP)
             ->addArgument(
                 'file',
-                InputArgument::OPTIONAL,
+                InputArgument::REQUIRED,
                 'File to lint the contents of'
-            )
-            ->addOption(
-                'rule',
-                'r',
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'Linting rules to use',
-                []
             )
         ;
     }

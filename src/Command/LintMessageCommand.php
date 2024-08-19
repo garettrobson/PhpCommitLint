@@ -74,9 +74,12 @@ HELP)
                 ),
                 $io::VERBOSITY_VERBOSE
             );
-            $include[] = $overridePath;
+            $includes[] = $overridePath;
         } else {
-            $io->writeln('No override found');
+            $io->writeln(
+                'No override found',
+                $io::VERBOSITY_VERBOSE
+            );
         }
 
         $validationConfiguration = new ValidatorConfiguration();

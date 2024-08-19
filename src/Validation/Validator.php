@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Linter;
+namespace GarettRobson\PhpCommitLint\Validation;
+
+use GarettRobson\PhpCommitLint\Message\Message;
 
 class Validator
 {

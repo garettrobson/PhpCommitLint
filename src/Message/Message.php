@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Linter;
+namespace GarettRobson\PhpCommitLint\Message;
 
-use PhpCsFixer\Runner\Runner;
-use Psr\Container\ContainerInterface;
 use RuntimeException;
+use Psr\Container\ContainerInterface;
 
 class Message implements ContainerInterface
 {

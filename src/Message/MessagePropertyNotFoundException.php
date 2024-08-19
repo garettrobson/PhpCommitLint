@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Linter;
+namespace GarettRobson\PhpCommitLint\Message;
 
 use Exception;
 use Psr\Container\NotFoundExceptionInterface;

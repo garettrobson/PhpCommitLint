@@ -8,17 +8,13 @@ use Exception;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
-use GarettRobson\PhpCommitLint\Linter\Validator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use GarettRobson\PhpCommitLint\Rules\LineLengthRule;
+use GarettRobson\PhpCommitLint\Validation\Validator;
 use Symfony\Component\Console\Output\OutputInterface;
-use GarettRobson\PhpCommitLint\Rules\PropertyRegexRule;
-use GarettRobson\PhpCommitLint\Rules\PropertyRequiredRule;
-use GarettRobson\PhpCommitLint\Rules\ConventionalCommitsRule;
-use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
+use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
 class LintMessageCommand extends Command
 {

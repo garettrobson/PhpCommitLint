@@ -1,7 +1,7 @@
 {
     "strict": {
         "description-upper": {
-            "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRegexRule",
+            "class": "GarettRobson\\PhpCommitLint\\Validation\\PropertyRegexRule",
             "parameters": [
                 "type",
                 "/^[A-Z0-9].*$/",

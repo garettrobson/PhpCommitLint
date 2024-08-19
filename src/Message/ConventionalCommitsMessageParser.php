@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Linter;
+namespace GarettRobson\PhpCommitLint\Message;
 
 class ConventionalCommitsMessageParser extends PatternLoadingMessageParser
 {

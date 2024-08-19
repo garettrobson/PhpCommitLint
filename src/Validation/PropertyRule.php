@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Rules;
-
-use GarettRobson\PhpCommitLint\Linter\Rule;
+namespace GarettRobson\PhpCommitLint\Validation;
 
 abstract class PropertyRule extends Rule
 {

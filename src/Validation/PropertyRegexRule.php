@@ -2,30 +2,31 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Rules;
+namespace GarettRobson\PhpCommitLint\Validation;
 
-use GarettRobson\PhpCommitLint\Linter\Message;
+use GarettRobson\PhpCommitLint\Message\Message;
 
-class PropertySetRule extends PropertyRule
+class PropertyRegexRule extends PropertyRule
 {
     public function __construct(
         protected string $property,
-        protected array $set = [],
-        protected string $errorMessage = 'Unexpected %s of value %s, must be one of; %s'
+        protected string $pattern,
+        protected string $errorMessage = 'Unexpected %s of value %s, does not conform to pattern: %s'
     ) {
+        parent::__construct($property);
     }
 
     public function performValidation(Message $message): self
     {
         if (
             $message->has($this->property) &&
-            !in_array($message->get($this->property), $this->set, true)
+            !preg_match($this->pattern, $message->get($this->property))
         ) {
             $this->addError(
                 $this->errorMessage,
                 $this->property,
                 $message->get($this->property),
-                json_encode($this->set, JSON_UNESCAPED_SLASHES),
+                $this->pattern
             );
         }
 

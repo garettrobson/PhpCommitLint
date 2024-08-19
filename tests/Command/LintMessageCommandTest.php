@@ -6,19 +6,18 @@ namespace GarettRobson\PhpCommitLint\Tests\Command;
 
 use RuntimeException;
 use PHPUnit\Framework\TestCase;
-use GarettRobson\PhpCommitLint\Linter\Rule;
 use PHPUnit\Framework\Attributes\CoversClass;
-use GarettRobson\PhpCommitLint\Linter\Message;
-use GarettRobson\PhpCommitLint\Linter\Validator;
+use GarettRobson\PhpCommitLint\Message\Message;
+use GarettRobson\PhpCommitLint\Validation\Validator;
 use Symfony\Component\Console\Tester\CommandTester;
-use GarettRobson\PhpCommitLint\Linter\MessageParser;
-use GarettRobson\PhpCommitLint\Rules\LineLengthRule;
-use GarettRobson\PhpCommitLint\Rules\PropertySetRule;
+use GarettRobson\PhpCommitLint\Message\MessageParser;
+use GarettRobson\PhpCommitLint\Validation\LineLengthRule;
+use GarettRobson\PhpCommitLint\Validation\PropertySetRule;
 use GarettRobson\PhpCommitLint\Command\LintMessageCommand;
-use GarettRobson\PhpCommitLint\Rules\PropertyRequiredRule;
+use GarettRobson\PhpCommitLint\Validation\PropertyRequiredRule;
 use GarettRobson\PhpCommitLint\Application\LintApplication;
-use GarettRobson\PhpCommitLint\Linter\PatternLoadingMessageParser;
-use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
+use GarettRobson\PhpCommitLint\Message\PatternLoadingMessageParser;
+use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
 #[CoversClass(LintMessageCommand::class)]
 #[CoversClass(LintApplication::class)]

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Rules;
+namespace GarettRobson\PhpCommitLint\Validation;
 
-use GarettRobson\PhpCommitLint\Linter\Rule;
-use GarettRobson\PhpCommitLint\Linter\Message;
+use GarettRobson\PhpCommitLint\Message\Message;
 
 class LineLengthRule extends Rule
 {

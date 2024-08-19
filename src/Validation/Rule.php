@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Linter;
+namespace GarettRobson\PhpCommitLint\Validation;
 
-use GarettRobson\PhpCommitLint\Linter\Message;
+use GarettRobson\PhpCommitLint\Message\Message;
 
 abstract class Rule
 {

@@ -6,8 +6,8 @@ namespace GarettRobson\PhpCommitLint\Tests\Linter;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use GarettRobson\PhpCommitLint\Linter\Message;
-use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
+use GarettRobson\PhpCommitLint\Message\Message;
+use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
 #[CoversClass(ConventionalCommitsMessageParser::class)]
 #[CoversClass(Message::class)]

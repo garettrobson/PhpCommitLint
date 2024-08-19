@@ -1,0 +1,12 @@
+{
+    "strict": [
+        {
+            "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRegexRule",
+            "parameters": [
+                "type",
+                "/^[A-Z0-9].*$/",
+                "Description must start with a capitol letter or number"
+            ]
+        }
+    ]
+}

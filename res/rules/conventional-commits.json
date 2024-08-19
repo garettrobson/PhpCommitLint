@@ -1,0 +1,34 @@
+{
+    "conventional-commits": [
+        {
+            "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRequiredRule",
+            "parameters": [
+                "type"
+            ]
+        },
+        {
+            "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRequiredRule",
+            "parameters": [
+                "description"
+            ]
+        },
+        {
+            "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertySetRule",
+            "parameters": [
+                "type",
+                [
+                    "fix",
+                    "feat",
+                    "build",
+                    "chore",
+                    "ci",
+                    "docs",
+                    "style",
+                    "refactor",
+                    "perf",
+                    "test"
+                ]
+            ]
+        }
+    ]
+}

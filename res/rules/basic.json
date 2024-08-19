@@ -1,0 +1,7 @@
+{
+    "basic": [
+        {
+            "class": "GarettRobson\\PhpCommitLint\\Rules\\LineLengthRule"
+        }
+    ]
+}

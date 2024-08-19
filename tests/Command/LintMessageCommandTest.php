@@ -13,9 +13,10 @@ use GarettRobson\PhpCommitLint\Linter\Validator;
 use Symfony\Component\Console\Tester\CommandTester;
 use GarettRobson\PhpCommitLint\Linter\MessageParser;
 use GarettRobson\PhpCommitLint\Rules\LineLengthRule;
+use GarettRobson\PhpCommitLint\Rules\PropertySetRule;
 use GarettRobson\PhpCommitLint\Command\LintMessageCommand;
+use GarettRobson\PhpCommitLint\Rules\PropertyRequiredRule;
 use GarettRobson\PhpCommitLint\Application\LintApplication;
-use GarettRobson\PhpCommitLint\Rules\ConventionalCommitsRule;
 use GarettRobson\PhpCommitLint\Linter\PatternLoadingMessageParser;
 use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
 
@@ -28,7 +29,8 @@ use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
 #[CoversClass(Rule::class)]
 #[CoversClass(Validator::class)]
 #[CoversClass(LineLengthRule::class)]
-#[CoversClass(ConventionalCommitsRule::class)]
+#[CoversClass(PropertyRequiredRule::class)]
+#[CoversClass(PropertySetRule::class)]
 class LintMessageCommandTest extends TestCase
 {
     public function testExecuteWithValidFile(): void

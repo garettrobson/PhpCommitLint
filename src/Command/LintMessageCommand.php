@@ -15,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use GarettRobson\PhpCommitLint\Rules\LineLengthRule;
 use Symfony\Component\Console\Output\OutputInterface;
+use GarettRobson\PhpCommitLint\Rules\PropertyRegexRule;
+use GarettRobson\PhpCommitLint\Rules\PropertyRequiredRule;
 use GarettRobson\PhpCommitLint\Rules\ConventionalCommitsRule;
 use GarettRobson\PhpCommitLint\Linter\ConventionalCommitsMessageParser;
 
@@ -46,7 +48,6 @@ HELP)
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $io = new SymfonyStyle($input, $output);
 
         $io->title('PHP Commit Lint: Message Lint');
@@ -63,11 +64,7 @@ HELP)
         $messageParser = new ConventionalCommitsMessageParser();
         $message = $messageParser->parseMessage($messageText);
 
-        $validator = new Validator();
-        $validator
-            ->addRule(new LineLengthRule())
-            ->addRule(new ConventionalCommitsRule())
-        ;
+        $validator = $this->getValidator($io);
         $errors = $validator->validate($message);
 
         if($errors) {
@@ -85,6 +82,41 @@ HELP)
 
         $io->success('Commit message passed linting');
         return static::SUCCESS;
+    }
+
+    protected function getValidator(SymfonyStyle $io): Validator
+    {
+        $validator = new Validator();
+        $configuration = $this->getConfiguration();
+        $rules = [];
+
+        foreach ($configuration['rules'] as $rule) {
+            if (substr($rule, 0, 1) === '@') {
+                $ruleName = substr($rule, 1);
+                if (!isset($configuration[$ruleName])) {
+                    throw new RuntimeException(sprintf(
+                        'Rule %s not found',
+                        $ruleName,
+                    ));
+                }
+
+                $rules = array_merge(
+                    $rules,
+                    $configuration[$ruleName],
+                );
+            } else {
+                $rules[] = $rule;
+            }
+        }
+
+        $io->writeln('<info>Rules:</info>', $io::VERBOSITY_VERBOSE);
+        foreach ($rules as $rule) {
+            $parameters = $rule['parameters'] ?? [];
+            $validator->addRule(new $rule['class'](...$parameters));
+            $io->writeln(sprintf('- %s(%s)', $rule['class'], implode(', ', array_map('json_encode', $parameters))), $io::VERBOSITY_VERBOSE);
+        }
+
+        return $validator;
     }
 
     protected function readFile($path)
@@ -111,6 +143,42 @@ HELP)
         }
 
         return $this->filesystem->readFile($path);
+    }
+
+    public function getConfiguration(): array
+    {
+        $configuration = array_merge(
+            [
+                'rules' => [
+                    '@basic',
+                    '@conventional-commits',
+                ]
+            ],
+            json_decode($this->filesystem->readfile(__DIR__ . '/../../res/rules/basic.json'), true),
+            json_decode($this->filesystem->readfile(__DIR__ . '/../../res/rules/conventional-commits.json'), true),
+            json_decode($this->filesystem->readfile(__DIR__ . '/../../res/rules/strict.json'), true),
+        );
+
+        $target = __DIR__;
+        $dirs = [];
+
+        do {
+            $dirs[] = $target;
+            $target = dirname($target);
+        } while(!in_array($target, $dirs, true));
+
+        foreach($dirs as $dir) {
+            $target = $dir . '/.php-commit-lint.json';
+            if($this->filesystem->exists($target)) {
+                $configuration = array_merge(
+                    $configuration,
+                    json_decode($this->filesystem->readfile($target), true)
+                );
+                break;
+            }
+        }
+
+        return $configuration;
     }
 
 }

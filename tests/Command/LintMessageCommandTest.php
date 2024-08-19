@@ -25,7 +25,6 @@ use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 #[CoversClass(MessageParser::class)]
 #[CoversClass(PatternLoadingMessageParser::class)]
 #[CoversClass(Message::class)]
-#[CoversClass(Rule::class)]
 #[CoversClass(Validator::class)]
 #[CoversClass(LineLengthRule::class)]
 #[CoversClass(PropertyRequiredRule::class)]

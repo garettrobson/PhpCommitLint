@@ -8,12 +8,19 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class Validator
 {
+    /**
+     * @param array<Rule> $rules
+     */
     public function __construct(
         protected array $rules = []
     ) {
     }
 
-    public function validate(Message $message)
+    /**
+     * @param Message $message
+     * @return array<string>
+     */
+    public function validate(Message $message): array
     {
         $errors = [];
         foreach($this->rules as $rule) {

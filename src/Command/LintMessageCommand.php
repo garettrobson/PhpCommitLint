@@ -50,7 +50,17 @@ HELP)
 
         $io->title('PHP Commit Lint: Message Lint');
 
-        $messageText = $this->readFile($input->getArgument('file'));
+        $file = $input->getArgument('file');
+        if(!is_string($file)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Expected string path, received %s',
+                    gettype($file)
+                )
+            );
+        }
+
+        $messageText = $this->filesystem->readFile($file);
         if(!$messageText) {
             throw new Exception(sprintf(
                 'No message to parse'
@@ -70,7 +80,7 @@ HELP)
             $io->writeln(
                 sprintf(
                     '<info>Using override <comment>%s</comment></info>',
-                    Path::makeRelative($overridePath, getcwd())
+                    Path::makeRelative($overridePath, (string)getcwd())
                 ),
                 $io::VERBOSITY_VERBOSE
             );
@@ -108,19 +118,15 @@ HELP)
         return static::SUCCESS;
     }
 
-    protected function readFile($path)
-    {
-        if ($path === null) {
-            return null;
-        }
-
-        return $this->filesystem->readFile($path);
-    }
-
-    protected function getLocalOverridePath()
+    protected function getLocalOverridePath(): string|false
     {
 
         $target = getcwd();
+
+        if($target === false) {
+            return false;
+        }
+
         $dirs = [];
 
         // Get all the directories to check, from the CWD towards the root of the system

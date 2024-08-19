@@ -8,6 +8,11 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertySetRule extends PropertyRule
 {
+    /**
+     * @param string $property
+     * @param array<string> $set
+     * @param string $errorMessage
+     */
     public function __construct(
         protected string $property,
         protected array $set = [],

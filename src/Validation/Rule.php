@@ -8,6 +8,7 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 abstract class Rule
 {
+    /** @var array<string> $errors */
     protected array $errors = [];
 
     /**
@@ -28,7 +29,12 @@ abstract class Rule
         return $this;
     }
 
-    public function addError(string $errorMessage, ...$arguments)
+    /**
+     * @param string $errorMessage
+     * @param bool|float|int|string|null ...$arguments
+     * @return self
+     */
+    public function addError(string $errorMessage, ...$arguments): self
     {
         $arguments = array_map(
             fn ($val) => sprintf('<comment>%s</comment>', $val),
@@ -43,7 +49,10 @@ abstract class Rule
         return $this;
     }
 
-    public function getErrors()
+    /**
+     * @return array<string>
+     */
+    public function getErrors(): array
     {
         return $this->errors;
     }

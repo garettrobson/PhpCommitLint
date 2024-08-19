@@ -63,13 +63,14 @@ Reviewed-by: Alice
 BREAKING CHANGE: User login API response structure changed
 TEST_MESSAGE;
 
-        $messageParser = new ConventionalCommitsMessageParser($testMessage);
+        $messageParser = new ConventionalCommitsMessageParser();
         $message = $messageParser->parseMessage($testMessage);
 
         $this->assertSame('feat', $message->get('type'));
         $this->assertSame('user-auth', $message->get('scope'));
         $this->assertSame('!', $message->get('breaking'));
         $this->assertSame('add multi-factor authentication', $message->get('description'));
+        $this->assertNotEmpty($message->get('body'));
         $this->assertStringEndsWith($message->get('body'), $testMessage);
     }
 }

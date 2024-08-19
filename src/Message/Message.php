@@ -9,6 +9,9 @@ use Psr\Container\ContainerInterface;
 
 class Message implements ContainerInterface
 {
+    /**
+     * @param array<string, string> $matches
+     */
     public function __construct(
         protected array $matches
     ) {
@@ -20,11 +23,11 @@ class Message implements ContainerInterface
      *
      * @param string $id Identifier of the match to look for.
      *
-     * @throws NotFoundExceptionInterface  No match was found for **this** identifier.
+     * @throws MessagePropertyNotFoundException  No match was found for **this** identifier.
      *
-     * @return mixed Entry.
+     * @return string Entry.
      */
-    public function get(string $id)
+    public function get(string $id): string
     {
         if(!$this->has($id)) {
             throw new MessagePropertyNotFoundException(sprintf(
@@ -33,7 +36,7 @@ class Message implements ContainerInterface
                 __METHOD__
             ));
         }
-        return $this->matches[$id] ?? null;
+        return $this->matches[$id];
     }
 
     /**
@@ -52,40 +55,9 @@ class Message implements ContainerInterface
         return isset($this->matches[$id]);
     }
 
-    public function set(string $id, $variable)
+    public function set(string $id, string $variable): self
     {
         $this->matches[$id] = $variable;
         return $this;
-    }
-
-    public function __call(string $function, array $arguments)
-    {
-        preg_match('/^(?<operation>get|has|set)(?<variable>[A-Z]\w*)$/', $function, $matches);
-
-        if(!$matches) {
-            throw new RuntimeException(sprintf(
-                'Call to unhandled method in %s: %s',
-                __METHOD__,
-                $function
-            ));
-        }
-
-        $variable = lcfirst($matches['variable']);
-        switch($matches['operation']) {
-            case 'has':
-                return $this->has($variable);
-            case 'get':
-                return $this->get($variable);
-            case 'set':
-                $count = count($arguments);
-                if($count !== 1) {
-                    throw new RuntimeException(sprintf(
-                        'Expected 1 argument in %s, received %s',
-                        __METHOD__,
-                        $count
-                    ));
-                }
-                return $this->set($variable, $arguments[0]);
-        }
     }
 }

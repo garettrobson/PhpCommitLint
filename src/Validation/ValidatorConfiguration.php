@@ -15,22 +15,34 @@ class ValidatorConfiguration
     protected Filesystem $filesystem;
     protected stdClass $types;
     protected stdClass $ruleSets;
+
+    /** @var array<stdClass> $patches */
     protected array $patches = [];
+
+    /** @var array<string> $using */
     protected array $using = [];
 
     public function __construct()
     {
         $this->filesystem = new Filesystem();
-        $this->types = new stdClass;
-        $this->ruleSets = new stdClass;
+        $this->types = new stdClass();
+        $this->ruleSets = new stdClass();
     }
 
-    public function includeFile(string $path)
+    public function includeFile(string $path): self
     {
         $path = Path::canonicalize($path);
 
         $json = $this->filesystem->readfile($path);
         $descriptor = json_decode($json);
+
+        if(!is_object($descriptor)) {
+            throw new RuntimeException(sprintf(
+                'Expected object, received %s from decoding %s',
+                gettype($descriptor),
+                $path,
+            ));
+        }
 
         if ($includes = $descriptor->includes ?? false) {
             foreach ($includes as $includePath) {
@@ -64,6 +76,8 @@ class ValidatorConfiguration
         if ($using = $descriptor->using ?? false) {
             $this->using = $using;
         }
+
+        return $this;
     }
 
     /**
@@ -71,7 +85,7 @@ class ValidatorConfiguration
      */
     public function getRules(): array
     {
-        $rules = new stdClass;
+        $rules = new stdClass();
         foreach($this->using as $ruleSetName) {
             $rules = (object)array_merge(
                 (array)$rules,
@@ -86,7 +100,18 @@ class ValidatorConfiguration
             $class = $rule->type;
             $parameters = $rule->parameters ?? [];
 
-            if (!is_subclass_of($class, Rule::class, true)) {
+            if(!is_string($class)) {
+                throw new RuntimeException(sprintf(
+                    'Expected class type of string, received %s',
+                    gettype($class),
+                ));
+            }
+            if(!class_exists($class, true)) {
+                throw new RuntimeException(sprintf(
+                    'Class %s does not exist',
+                    $class,
+                ));
+            } elseif (!is_subclass_of($class, Rule::class, true)) {
                 throw new RuntimeException(sprintf(
                     'Expected %s to be subclass of %s, parents are %s',
                     $class,

@@ -1,6 +1,6 @@
 {
-    "strict": [
-        {
+    "strict": {
+        "description-upper": {
             "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRegexRule",
             "parameters": [
                 "type",
@@ -8,5 +8,5 @@
                 "Description must start with a capitol letter or number"
             ]
         }
-    ]
+    }
 }

@@ -110,11 +110,27 @@ HELP)
         }
 
         $io->writeln('<info>Rules:</info>', $io::VERBOSITY_VERBOSE);
-        foreach ($rules as $rule) {
+        foreach ($rules as $key => $rule) {
+            $class = $rule['class'];
             $parameters = $rule['parameters'] ?? [];
-            $validator->addRule(new $rule['class'](...$parameters));
-            $io->writeln(sprintf('- %s(%s)', $rule['class'], implode(', ', array_map('json_encode', $parameters))), $io::VERBOSITY_VERBOSE);
+            $validator->addRule(new $class(...$parameters));
+            $io->writeln(
+                sprintf(
+                    '- <comment>[%s]</comment> %s(%s)',
+                    $key,
+                    $rule['class'],
+                    implode(', ', array_map(
+                        fn($value) => sprintf(
+                            '<info>%s</info>',
+                            json_encode($value)
+                        ),
+                        $parameters
+                    ))
+                ),
+                $io::VERBOSITY_VERBOSE
+            );
         }
+        $io->writeln('', $io::VERBOSITY_VERBOSE);
 
         return $validator;
     }

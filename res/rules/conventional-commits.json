@@ -1,18 +1,18 @@
 {
-    "conventional-commits": [
-        {
+    "conventional-commits": {
+        "type-required": {
             "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRequiredRule",
             "parameters": [
                 "type"
             ]
         },
-        {
+        "description-required": {
             "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertyRequiredRule",
             "parameters": [
                 "description"
             ]
         },
-        {
+        "type-set": {
             "class": "GarettRobson\\PhpCommitLint\\Rules\\PropertySetRule",
             "parameters": [
                 "type",
@@ -30,5 +30,5 @@
                 ]
             ]
         }
-    ]
+    }
 }

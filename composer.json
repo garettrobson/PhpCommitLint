@@ -33,7 +33,7 @@
             "@lint-src",
             "@lint-tests"
         ],
-        "analyse": "phpstan analyse -9 tests/ src/",
+        "analyse": "phpstan analyse -l9 tests/ src/",
         "lint-src": "php-cs-fixer fix src",
         "lint-tests": "php-cs-fixer fix tests"
     }

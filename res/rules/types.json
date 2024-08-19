@@ -1,0 +1,8 @@
+{
+    "types": {
+        "line-length": "GarettRobson\\PhpCommitLint\\Validation\\LineLengthRule",
+        "property-regex": "GarettRobson\\PhpCommitLint\\Validation\\PropertyRegexRule",
+        "property-required": "GarettRobson\\PhpCommitLint\\Validation\\PropertyRequiredRule",
+        "property-set": "GarettRobson\\PhpCommitLint\\Validation\\PropertySetRule"
+    }
+}

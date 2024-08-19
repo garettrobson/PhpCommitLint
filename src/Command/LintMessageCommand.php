@@ -6,6 +6,7 @@ namespace GarettRobson\PhpCommitLint\Command;
 
 use Exception;
 use RuntimeException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -14,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use GarettRobson\PhpCommitLint\Validation\Validator;
 use Symfony\Component\Console\Output\OutputInterface;
+use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
 class LintMessageCommand extends Command
@@ -60,7 +62,30 @@ HELP)
         $messageParser = new ConventionalCommitsMessageParser();
         $message = $messageParser->parseMessage($messageText);
 
-        $validator = $this->getValidator($io);
+        $includes = [
+            __DIR__ . '/../../res/rules.json',
+        ];
+
+        if($overridePath = $this->getLocalOverridePath()) {
+            $io->writeln(
+                sprintf(
+                    '<info>Using override <comment>%s</comment></info>',
+                    Path::makeRelative($overridePath, getcwd())
+                ),
+                $io::VERBOSITY_VERBOSE
+            );
+            $include[] = $overridePath;
+        } else {
+            $io->writeln('No override found');
+        }
+
+        $validationConfiguration = new ValidatorConfiguration();
+        foreach($includes as $include) {
+            $validationConfiguration->includeFile($include);
+        }
+
+        $validator = new Validator($validationConfiguration->getRules());
+
         $errors = $validator->validate($message);
 
         if($errors) {
@@ -80,117 +105,37 @@ HELP)
         return static::SUCCESS;
     }
 
-    protected function getValidator(SymfonyStyle $io): Validator
-    {
-        $validator = new Validator();
-        $configuration = $this->getConfiguration();
-        $rules = [];
-
-        foreach ($configuration['rules'] as $rule) {
-            if (substr($rule, 0, 1) === '@') {
-                $ruleName = substr($rule, 1);
-                if (!isset($configuration[$ruleName])) {
-                    throw new RuntimeException(sprintf(
-                        'Rule %s not found',
-                        $ruleName,
-                    ));
-                }
-
-                $rules = array_merge(
-                    $rules,
-                    $configuration[$ruleName],
-                );
-            } else {
-                $rules[] = $rule;
-            }
-        }
-
-        $io->writeln('<info>Rules:</info>', $io::VERBOSITY_VERBOSE);
-        foreach ($rules as $key => $rule) {
-            $class = $rule['class'];
-            $parameters = $rule['parameters'] ?? [];
-            $validator->addRule(new $class(...$parameters));
-            $io->writeln(
-                sprintf(
-                    '- <comment>[%s]</comment> %s(%s)',
-                    $key,
-                    $rule['class'],
-                    implode(', ', array_map(
-                        fn($value) => sprintf(
-                            '<info>%s</info>',
-                            json_encode($value)
-                        ),
-                        $parameters
-                    ))
-                ),
-                $io::VERBOSITY_VERBOSE
-            );
-        }
-        $io->writeln('', $io::VERBOSITY_VERBOSE);
-
-        return $validator;
-    }
-
     protected function readFile($path)
     {
-        if($path === null) {
+        if ($path === null) {
             return null;
-        }
-
-        if(!$this->filesystem->exists($path)) {
-            throw new RuntimeException(sprintf(
-                'File not found: %s',
-                $path
-            ));
-        } elseif(!is_readable($path)) {
-            throw new RuntimeException(sprintf(
-                'Unable to read: %s',
-                $path
-            ));
-        } elseif(is_dir($path)) {
-            throw new RuntimeException(sprintf(
-                'Expected file, received directory: %s',
-                $path
-            ));
         }
 
         return $this->filesystem->readFile($path);
     }
 
-    public function getConfiguration(): array
+    protected function getLocalOverridePath()
     {
-        $configuration = array_merge(
-            [
-                'rules' => [
-                    '@basic',
-                    '@conventional-commits',
-                ]
-            ],
-            json_decode($this->filesystem->readfile(__DIR__ . '/../../res/rules/basic.json'), true),
-            json_decode($this->filesystem->readfile(__DIR__ . '/../../res/rules/conventional-commits.json'), true),
-            json_decode($this->filesystem->readfile(__DIR__ . '/../../res/rules/strict.json'), true),
-        );
 
-        $target = __DIR__;
+        $target = getcwd();
         $dirs = [];
 
+        // Get all the directories to check, from the CWD towards the root of the system
         do {
             $dirs[] = $target;
             $target = dirname($target);
-        } while(!in_array($target, $dirs, true));
+        } while (!in_array($target, $dirs, true));
 
-        foreach($dirs as $dir) {
+        // Return the first .php-commit-lint.json files found
+        foreach ($dirs as $dir) {
             $target = $dir . '/.php-commit-lint.json';
-            if($this->filesystem->exists($target)) {
-                $configuration = array_merge(
-                    $configuration,
-                    json_decode($this->filesystem->readfile($target), true)
-                );
-                break;
+            if ($this->filesystem->exists($target)) {
+                return $target;
             }
         }
 
-        return $configuration;
+        // Return false if not found
+        return false;
     }
 
 }

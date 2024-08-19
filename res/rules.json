@@ -1,0 +1,12 @@
+{
+    "includes": [
+        "rules/types.json",
+        "rules/basic.json",
+        "rules/strict.json",
+        "rules/conventional-commits.json"
+    ],
+    "using": [
+        "basic",
+        "conventional-commits"
+    ]
+}

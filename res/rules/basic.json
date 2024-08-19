@@ -1,7 +1,9 @@
 {
-    "basic": {
-        "line-length": {
-            "class": "GarettRobson\\PhpCommitLint\\Validation\\LineLengthRule"
+    "ruleSets" : {
+        "basic": {
+            "line-length": {
+                "type": "line-length"
+            }
         }
     }
 }

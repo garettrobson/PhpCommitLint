@@ -1,34 +1,36 @@
 {
-    "conventional-commits": {
-        "type-required": {
-            "class": "GarettRobson\\PhpCommitLint\\Validation\\PropertyRequiredRule",
-            "parameters": [
-                "type"
-            ]
-        },
-        "description-required": {
-            "class": "GarettRobson\\PhpCommitLint\\Validation\\PropertyRequiredRule",
-            "parameters": [
-                "description"
-            ]
-        },
-        "type-set": {
-            "class": "GarettRobson\\PhpCommitLint\\Validation\\PropertySetRule",
-            "parameters": [
-                "type",
-                [
-                    "fix",
-                    "feat",
-                    "build",
-                    "chore",
-                    "ci",
-                    "docs",
-                    "style",
-                    "refactor",
-                    "perf",
-                    "test"
+    "ruleSets": {
+        "conventional-commits": {
+            "type-required": {
+                "type": "property-required",
+                "parameters": [
+                    "type"
                 ]
-            ]
+            },
+            "description-required": {
+                "type": "property-required",
+                "parameters": [
+                    "description"
+                ]
+            },
+            "type-set": {
+                "type": "property-set",
+                "parameters": [
+                    "type",
+                    [
+                        "fix",
+                        "feat",
+                        "build",
+                        "chore",
+                        "ci",
+                        "docs",
+                        "style",
+                        "refactor",
+                        "perf",
+                        "test"
+                    ]
+                ]
+            }
         }
     }
 }

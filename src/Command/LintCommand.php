@@ -6,26 +6,20 @@ namespace GarettRobson\PhpCommitLint\Command;
 
 use Exception;
 use RuntimeException;
-use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
+use GarettRobson\PhpCommitLint\Validation\Rule;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use GarettRobson\PhpCommitLint\Validation\Validator;
 use Symfony\Component\Console\Output\OutputInterface;
-use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
-class LintMessageCommand extends Command
+class LintCommand extends PhpCommitLintCommand
 {
-    protected Filesystem $filesystem;
-
     public function __construct()
     {
-        parent::__construct('message:lint');
-        $this->filesystem = new Filesystem();
+        parent::__construct('lint');
     }
 
     protected function configure(): void
@@ -38,8 +32,8 @@ When installed as a composer dependency symlink the executable to <comment>commi
 HELP)
             ->addArgument(
                 'file',
-                InputArgument::REQUIRED,
-                'File to lint the contents of'
+                InputArgument::OPTIONAL,
+                'File to lint the contents of, displays help if not present'
             )
         ;
     }
@@ -50,14 +44,18 @@ HELP)
 
         $io->title('PHP Commit Lint: Message Lint');
 
+        parent::execute($input, $output);
+
         $file = $input->getArgument('file');
         if(!is_string($file)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Expected string path, received %s',
-                    gettype($file)
-                )
-            );
+            $greetInput = new ArrayInput([
+                '--help'  => true,
+            ]);
+            if($application = $this->getApplication()) {
+                return $application->doRun($greetInput, $output);
+            } else {
+                throw new RuntimeException('Failed to retrieve application context');
+            }
         }
 
         $messageText = $this->filesystem->readFile($file);
@@ -72,32 +70,9 @@ HELP)
         $messageParser = new ConventionalCommitsMessageParser();
         $message = $messageParser->parseMessage($messageText);
 
-        $includes = [
-            __DIR__ . '/../../res/rules.json',
-        ];
 
-        if($overridePath = $this->getLocalOverridePath()) {
-            $io->writeln(
-                sprintf(
-                    '<info>Using override <comment>%s</comment></info>',
-                    Path::makeRelative($overridePath, (string)getcwd())
-                ),
-                $io::VERBOSITY_VERBOSE
-            );
-            $includes[] = $overridePath;
-        } else {
-            $io->writeln(
-                'No override found',
-                $io::VERBOSITY_VERBOSE
-            );
-        }
 
-        $validationConfiguration = new ValidatorConfiguration();
-        foreach($includes as $include) {
-            $validationConfiguration->includeFile($include);
-        }
-
-        $validator = new Validator($validationConfiguration->getRules());
+        $validator = new Validator($this->getRules());
 
         $errors = $validator->validate($message);
 
@@ -118,33 +93,41 @@ HELP)
         return static::SUCCESS;
     }
 
-    protected function getLocalOverridePath(): string|false
-    {
+    /**
+     * @return array<Rule>
+     */
+    public function getRules(): array {
 
-        $target = getcwd();
+        $rules = [];
+        foreach ($this->validationConfiguration->getRules() as $rule) {
+            $class = $rule->class;
+            $parameters = $rule->parameters ?? [];
 
-        if($target === false) {
-            return false;
-        }
-
-        $dirs = [];
-
-        // Get all the directories to check, from the CWD towards the root of the system
-        do {
-            $dirs[] = $target;
-            $target = dirname($target);
-        } while (!in_array($target, $dirs, true));
-
-        // Return the first .php-commit-lint.json files found
-        foreach ($dirs as $dir) {
-            $target = $dir . '/.php-commit-lint.json';
-            if ($this->filesystem->exists($target)) {
-                return $target;
+            if (!is_string($class)) {
+                throw new RuntimeException(sprintf(
+                    'Expected class type of string, received %s',
+                    gettype($class),
+                ));
             }
-        }
+            if (!class_exists($class, true)) {
+                throw new RuntimeException(sprintf(
+                    'Class %s does not exist',
+                    $class,
+                ));
+            } elseif (!is_subclass_of($class, Rule::class, true)) {
+                throw new RuntimeException(sprintf(
+                    'Expected %s to be subclass of %s, parents are %s',
+                    $class,
+                    Rule::class,
+                    implode(', ', class_parents($class)),
+                ));
+            }
 
-        // Return false if not found
-        return false;
+            $rule = new $class(...$parameters);
+            $rules[] = $rule;
+        }
+        return $rules;
     }
+
 
 }

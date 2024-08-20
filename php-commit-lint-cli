@@ -8,6 +8,5 @@ include 'vendor/autoload.php';
 use GarettRobson\PhpCommitLint\Application\LintApplication;
 
 (new LintApplication())
-    ->setDefaultCommand('lint', true)
     ->run()
 ;

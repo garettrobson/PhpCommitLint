@@ -71,6 +71,13 @@ class ValidatorConfiguration
         }
 
         if ($ruleSets = $descriptor->ruleSets ?? false) {
+            foreach ($ruleSets as $ruleSetName => &$ruleSet) {
+                foreach ($ruleSet as $ruleName => &$rule) {
+                    $rule->included = $path;
+                    $rule->name = $ruleName;
+                    $rule->from = $ruleSetName;
+                }
+            }
             $this->ruleSets = (object)array_merge(
                 (array)$this->ruleSets,
                 (array)$ruleSets,
@@ -81,7 +88,7 @@ class ValidatorConfiguration
     }
 
     /**
-     * @return array<Rule>
+     * @return array<stdClass>
      */
     public function getRules(): array
     {
@@ -96,33 +103,6 @@ class ValidatorConfiguration
         $patch = JsonPatch::import($this->patches);
         $patch->apply($rules, true);
 
-        foreach($rules as &$rule) {
-            $class = $rule->type;
-            $parameters = $rule->parameters ?? [];
-
-            if(!is_string($class)) {
-                throw new RuntimeException(sprintf(
-                    'Expected class type of string, received %s',
-                    gettype($class),
-                ));
-            }
-            if(!class_exists($class, true)) {
-                throw new RuntimeException(sprintf(
-                    'Class %s does not exist',
-                    $class,
-                ));
-            } elseif (!is_subclass_of($class, Rule::class, true)) {
-                throw new RuntimeException(sprintf(
-                    'Expected %s to be subclass of %s, parents are %s',
-                    $class,
-                    Rule::class,
-                    implode(', ', class_parents($class)),
-                ));
-            }
-
-            $rule = new $class(...$parameters);
-        }
-
         return (array)$rules;
     }
 
@@ -130,7 +110,7 @@ class ValidatorConfiguration
     {
         $ruleSet = $this->ruleSets->$ruleSetName ?? [];
         foreach($ruleSet as &$rule) {
-            $rule->type = $this->getType($rule->type);
+            $rule->class = $this->getType($rule->type);
         }
         return $ruleSet;
     }

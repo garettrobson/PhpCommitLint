@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Application;
 
+use GarettRobson\PhpCommitLint\Command\ConfigCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use GarettRobson\PhpCommitLint\Command\LintMessageCommand;
+use GarettRobson\PhpCommitLint\Command\LintCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 class LintApplication extends Application
@@ -16,9 +17,9 @@ class LintApplication extends Application
     {
         parent::__construct('git-commit-lint', '0.0.0');
         $this->addCommands([
-            new LintMessageCommand()
+            new LintCommand(),
+            new ConfigCommand(),
         ]);
-        $this->setDefaultCommand('message:lint', true);
     }
 
     protected function configureIO(InputInterface $input, OutputInterface $output): void

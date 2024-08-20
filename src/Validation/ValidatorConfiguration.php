@@ -55,6 +55,14 @@ class ValidatorConfiguration
             }
         }
 
+        if ($using = $descriptor->using ?? false) {
+            $this->using = $using;
+        }
+
+        if ($patches = $descriptor->patches ?? false) {
+            array_push($this->patches, ...$patches);
+        }
+
         if($types = $descriptor->types ?? false) {
             $this->types = (object)array_merge(
                 (array)$this->types,
@@ -67,14 +75,6 @@ class ValidatorConfiguration
                 (array)$this->ruleSets,
                 (array)$ruleSets,
             );
-        }
-
-        if ($patches = $descriptor->patches ?? false) {
-            array_push($this->patches, ...$patches);
-        }
-
-        if ($using = $descriptor->using ?? false) {
-            $this->using = $using;
         }
 
         return $this;

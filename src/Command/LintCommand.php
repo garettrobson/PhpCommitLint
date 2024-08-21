@@ -24,6 +24,7 @@ class LintCommand extends PhpCommitLintCommand
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->setDescription('Lint a commit message')
             ->setHelp(<<<HELP

@@ -47,11 +47,13 @@ class ValidatorConfiguration
 
         if ($includes = $descriptor->includes ?? false) {
             foreach ($includes as $includePath) {
+
                 $includePath = Path::canonicalize($includePath);
                 $includePath = $this->filesystem->isAbsolutePath($includePath) ?
                     $includePath :
-                    Path::makeAbsolute($includePath, dirname($path))
+                    Path::makeAbsolute($includePath, dirname(realpath($path)))
                 ;
+                var_dump($includePath);
                 $this->includeFile($includePath, $included);
             }
         }

@@ -7,6 +7,7 @@ namespace GarettRobson\PhpCommitLint\Command;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,14 +24,28 @@ abstract class PhpCommitLintCommand extends Command
         $this->filesystem = new Filesystem();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->addOption(
+                'include',
+                'i',
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+                'Include additional configuration files',
+                []
+            )
+        ;
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $includes = [
-            __DIR__ . '/../../res/rules.json',
+            __DIR__ . '/../../res/rules.json'
         ];
+
+        array_push($includes, ...($input->getOption('include') ?? []));
 
         if ($overridePath = $this->getLocalOverridePath()) {
             $includes[] = $overridePath;

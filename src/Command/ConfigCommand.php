@@ -17,6 +17,7 @@ class ConfigCommand extends PhpCommitLintCommand
 
     protected function configure(): void
     {
+        parent::configure();
         $this
             ->setDescription('Configuration tool')
             ->setHelp(<<<HELP
@@ -55,11 +56,11 @@ HELP)
                 )
             ));
             $io->writeln(
-                sprintf(' - <info>Class:</info>%s', $rule->class),
+                sprintf(' - <info>Class:</info> <text>%s</text>', $rule->class),
                 $io::VERBOSITY_VERBOSE
             );
             $io->writeln(
-                sprintf(' - <info>Included:</info> %s', $rule->included),
+                sprintf(' - <info>Included:</info> <text>%s</text>', $rule->included),
                 $io::VERBOSITY_VERBOSE
             );
         }

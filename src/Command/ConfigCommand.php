@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ConfigCommand extends PhpCommitLintCommand
 {
+    protected bool $executeDefault = true;
+
     public function __construct()
     {
         parent::__construct('config');
@@ -52,82 +54,61 @@ class ConfigCommand extends PhpCommitLintCommand
 
         parent::execute($input, $output);
 
-        $executeDefault = true;
-
         if ($input->getOption('types')) {
-
-            $executeDefault = false;
-
-            $io->section('Types');
-
-            foreach ((array)$this->validationConfiguration->getTypes() as $typeName => $typeClass) {
-
-                $io->writeln(sprintf(
-                    ' <info>[%s]</info> %s',
-                    $typeName,
-                    $typeClass,
-                ));
-
-            }
+            $this->displayTypes($io);
         }
 
         if ($input->getOption('rule-sets')) {
-
-            $executeDefault = false;
-
-            $io->section('Rule sets');
-
-            foreach((array)$this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
-
-                $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
-
-                foreach ($ruleSet as $ruleName => $rule) {
-
-                    $io->writeln(sprintf(
-                        ' <info>[%s]</info> %s (%s)',
-                        $rule->name,
-                        $rule->type,
-                        implode(
-                            ', ',
-                            array_map(
-                                fn ($parameter) => sprintf(
-                                    '<comment>%s</comment>',
-                                    json_encode($parameter)
-                                ),
-                                $rule->parameters ?? [],
-                            )
-                        )
-                    ));
-
-                    if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-                        $io->writeln(
-                            sprintf(' - <info>Included:</info> <text>%s</text>', $rule->included),
-                            $io::VERBOSITY_VERY_VERBOSE
-                        );
-                    }
-
-                }
-
-            }
-
+            $this->displayRuleSets($io);
         }
 
-        if($input->getOption('using') || $executeDefault) {
+        if($input->getOption('using') || $this->executeDefault) {
+            $this->displayUsing($io);
+        }
 
-            $io->section('Using rules');
+        return self::SUCCESS;
+    }
 
-            foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
+    protected function displayTypes(SymfonyStyle $io): void
+    {
+        $this->executeDefault = false;
+
+        $io->section('Types');
+
+        foreach ((array)$this->validationConfiguration->getTypes() as $typeName => $typeClass) {
+
+            $io->writeln(sprintf(
+                ' <info>[%s]</info> %s',
+                $typeName,
+                $typeClass,
+            ));
+        }
+    }
+
+    protected function displayRuleSets(SymfonyStyle $io): void
+    {
+        $this->executeDefault = false;
+
+        $io->section('Rule sets');
+
+        foreach ((array)$this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
+
+            $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
+
+            foreach ($ruleSet as $ruleName => $rule) {
 
                 $io->writeln(sprintf(
-                    '<info>[%s]</info> %s(%s)',
-                    $ruleName,
+                    ' <info>[%s]</info> %s (%s)',
+                    $rule->name,
                     $rule->type,
                     implode(
                         ', ',
                         array_map(
                             fn ($parameter) => sprintf(
                                 '<comment>%s</comment>',
-                                json_encode($parameter)
+                                (is_array($parameter) || is_object($parameter)) ?
+                                    json_encode($parameter, JSON_UNESCAPED_SLASHES) :
+                                    $parameter,
                             ),
                             $rule->parameters ?? [],
                         )
@@ -135,24 +116,54 @@ class ConfigCommand extends PhpCommitLintCommand
                 ));
 
                 if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-                    $io->writeln(sprintf(
-                        ' - <info>Class:</info> <text>%s</text>',
-                        $rule->class
-                    ));
-                    $io->writeln(sprintf(
-                        ' - <info>Included:</info> <text>%s</text>',
-                        $rule->included
-                    ));
-                    $io->writeln(sprintf(
-                        ' - <info>From:</info> <text>%s</text>',
-                        $rule->from
-                    ));
+                    $io->writeln(
+                        sprintf(' - <info>Included:</info> <text>%s</text>', $rule->included),
+                        $io::VERBOSITY_VERY_VERBOSE
+                    );
                 }
-
             }
+        }
+    }
 
+    protected function displayUsing(SymfonyStyle $io): void
+    {
+        $io->section('Using rules');
+
+        foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
+
+            $io->writeln(sprintf(
+                '<info>[%s]</info> %s(%s)',
+                $ruleName,
+                $rule->type,
+                implode(
+                    ', ',
+                    array_map(
+                        fn ($parameter) => sprintf(
+                            '<comment>%s</comment>',
+                            is_array($parameter) ?
+                                json_encode($parameter, JSON_UNESCAPED_SLASHES) :
+                                $parameter,
+                        ),
+                        $rule->parameters ?? [],
+                    )
+                )
+            ));
+
+            if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+                $io->writeln(sprintf(
+                    ' - <info>Class:</info> <text>%s</text>',
+                    $rule->class
+                ));
+                $io->writeln(sprintf(
+                    ' - <info>Included:</info> <text>%s</text>',
+                    $rule->included
+                ));
+                $io->writeln(sprintf(
+                    ' - <info>From:</info> <text>%s</text>',
+                    $rule->from
+                ));
+            }
         }
 
-        return self::SUCCESS;
     }
 }

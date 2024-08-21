@@ -42,12 +42,28 @@ abstract class PhpCommitLintCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $includeOptions = $input->getOption('include') ?? [];
+        $includePaths = $input->getOption('include') ?? [];
         $includes = [
             __DIR__ . '/../../res/rules.json',
-            ...(array)$includeOptions
+            ...(array)$includePaths
         ];
 
+        $this->includeLocalOverridePath($io, $includes);
+        $this->prepareValidatorConfiguration($io, $includes);
+
+        return self::SUCCESS;
+
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param SymfonyStyle $io
+     * @param array<string> $includes
+     * @return void
+     */
+    protected function includeLocalOverridePath(SymfonyStyle $io, array &$includes)
+    {
         if ($overridePath = $this->getLocalOverridePath()) {
             $includes[] = $overridePath;
 
@@ -59,35 +75,12 @@ abstract class PhpCommitLintCommand extends Command
                 $io::VERBOSITY_VERBOSE
             );
         } else {
-            $io->writeln('<comment>No local override found</comment>', $io::VERBOSITY_VERBOSE);
+            $io->writeln(
+                '<comment>No local override found</comment>',
+                $io::VERBOSITY_VERBOSE
+            );
         }
         $io->writeln('', $io::VERBOSITY_VERBOSE);
-
-        $this->validationConfiguration = new ValidatorConfiguration();
-        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-            $io->section('Including files');
-        }
-        foreach ($includes as $include) {
-            if(!is_string($include)) {
-                throw new RuntimeException(sprintf(
-                    'Expected list of includes to contain strings, received %s',
-                    gettype($include)
-                ));
-            }
-            $include = Path::canonicalize($include);
-            $include = $this->validationConfiguration->includeFile($include);
-            if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-                foreach($include as $path) {
-                    $io->writeln(sprintf('<text>%s</text>', $path));
-                }
-            }
-        }
-        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-            $io->writeln('');
-        }
-
-        return self::SUCCESS;
-
     }
 
     protected function getLocalOverridePath(): string|false
@@ -117,6 +110,38 @@ abstract class PhpCommitLintCommand extends Command
 
         // Return false if not found
         return false;
+    }
+
+    /**
+     * @param SymfonyStyle $io
+     * @param array<string> $includes
+     * @return void
+     */
+    protected function prepareValidatorConfiguration(SymfonyStyle $io, array &$includes): void
+    {
+        $this->validationConfiguration = new ValidatorConfiguration();
+
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $io->section('Including files');
+        }
+        foreach ($includes as $include) {
+            if (!is_string($include)) {
+                throw new RuntimeException(sprintf(
+                    'Expected list of includes to contain strings, received %s',
+                    gettype($include)
+                ));
+            }
+            $include = Path::canonicalize($include);
+            $include = $this->validationConfiguration->includeFile($include);
+            if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+                foreach ($include as $path) {
+                    $io->writeln(sprintf('<text>%s</text>', $path));
+                }
+            }
+        }
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $io->writeln('');
+        }
     }
 
 }

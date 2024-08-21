@@ -48,8 +48,20 @@ abstract class PhpCommitLintCommand extends Command
         $io->writeln('', $io::VERBOSITY_VERBOSE);
 
         $this->validationConfiguration = new ValidatorConfiguration();
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $io->section('Including files');
+        }
         foreach ($includes as $include) {
-            $this->validationConfiguration->includeFile($include);
+            $include = Path::canonicalize($include);
+            $include = $this->validationConfiguration->includeFile($include);
+            if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+                foreach($include as $path) {
+                    $io->writeln($path);
+                }
+            }
+        }
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $io->writeln('');
         }
 
         return self::SUCCESS;

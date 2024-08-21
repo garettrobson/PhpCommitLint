@@ -29,12 +29,13 @@ class ValidatorConfiguration
         $this->ruleSets = new stdClass();
     }
 
-    public function includeFile(string $path): self
+    public function includeFile(string $path, array &$included = []): array
     {
         $path = Path::canonicalize($path);
 
         $json = $this->filesystem->readfile($path);
         $descriptor = json_decode($json);
+        $included[] = $path;
 
         if(!is_object($descriptor)) {
             throw new RuntimeException(sprintf(
@@ -51,7 +52,7 @@ class ValidatorConfiguration
                     $includePath :
                     Path::makeAbsolute($includePath, dirname($path))
                 ;
-                $this->includeFile($includePath);
+                $this->includeFile($includePath, $included);
             }
         }
 
@@ -84,7 +85,7 @@ class ValidatorConfiguration
             );
         }
 
-        return $this;
+        return $included;
     }
 
     /**

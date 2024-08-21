@@ -11,7 +11,7 @@ class PropertyExistenceRule extends PropertyRule
     public function __construct(
         protected string $property,
         protected bool $exists = true,
-        protected string $errorMessage = 'Required %s'
+        protected string $errorMessage = 'Required property %s missing',
     ) {
     }
 

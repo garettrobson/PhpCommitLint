@@ -58,7 +58,15 @@ class ValidatorConfiguration
         }
 
         $json = $this->filesystem->readfile($path);
-        $descriptor = json_decode($json);
+        try {
+            $descriptor = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+        } catch(\JsonException $e) {
+            throw new RuntimeException(sprintf(
+                'The file %s raised the following JSON error; %s',
+                $path,
+                $e->getMessage(),
+            ));
+        }
         $included[] = $path;
 
         if(!is_object($descriptor)) {

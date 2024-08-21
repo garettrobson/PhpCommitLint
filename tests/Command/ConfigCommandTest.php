@@ -35,50 +35,20 @@ use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 #[CoversClass(ConfigCommand::class)]
 #[CoversClass(ValidatorConfiguration::class)]
 #[CoversClass(PropertyRegexRule::class)]
-class LintCommandTest extends TestCase
+class ConfigCommandTest extends TestCase
 {
-    public function testExecuteWithValidMessage(): void
+    public function testExecute(): void
     {
         $application = new PhpCommitLintApplication();
 
-        $command = $application->find('lint');
+        $command = $application->find('config');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'file' => __DIR__ . '/res/test/conventional-commits-valid.txt',
-        ]);
+        $commandTester->execute([]);
 
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();
 
-        $this->assertStringContainsString('[OK] Commit message passed linting', $output);
-    }
-
-    public function testExecuteWithInvalidMessage(): void
-    {
-        $application = new PhpCommitLintApplication();
-
-        $command = $application->find('lint');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'file' => __DIR__ . '/res/test/conventional-commits-invalid.txt',
-        ]);
-
-        $output = $commandTester->getDisplay();
-
-        $this->assertStringContainsString('[ERROR] Commit message failed linting', $output);
-    }
-
-    public function testExecuteNonExistentFile(): void
-    {
-        $application = new PhpCommitLintApplication();
-
-        $command = $application->find('lint');
-        $commandTester = new CommandTester($command);
-
-        $this->expectException(RuntimeException::class);
-
-        $commandTester->execute([
-            'file' => __DIR__ . '/file-does-not-exist.txt',
-        ]);
+        $this->assertStringContainsString('[line-length]', $output);
+        $this->assertStringContainsString('[summary-no-leading-spaces]', $output);
     }
 }

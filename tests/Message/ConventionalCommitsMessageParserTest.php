@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Tests\Linter;
+namespace GarettRobson\PhpCommitLint\Tests\Message;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -24,6 +24,7 @@ final class ConventionalCommitsMessageParserTest extends TestCase
         $this->assertFalse($message->has('scope'));
         $this->assertFalse($message->has('breaking'));
         $this->assertSame('', $message->get('description'));
+        $this->assertFalse($message->has('body'));
     }
 
     public function testParseCorrectMessage(): void
@@ -37,6 +38,7 @@ final class ConventionalCommitsMessageParserTest extends TestCase
         $this->assertSame('user-auth', $message->get('scope'));
         $this->assertFalse($message->has('breaking'));
         $this->assertSame('add multi-factor authentication', $message->get('description'));
+        $this->assertFalse($message->has('body'));
     }
 
     public function testParseCompleteMessage(): void
@@ -70,6 +72,7 @@ TEST_MESSAGE;
         $this->assertSame('user-auth', $message->get('scope'));
         $this->assertSame('!', $message->get('breaking'));
         $this->assertSame('add multi-factor authentication', $message->get('description'));
+        $this->assertTrue($message->has('body'));
         $this->assertNotEmpty($message->get('body'));
         $this->assertStringEndsWith($message->get('body'), $testMessage);
     }

@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace GarettRobson\PhpCommitLint\Tests\Linter;
+namespace GarettRobson\PhpCommitLint\Tests\Message;
 
-use RuntimeException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use GarettRobson\PhpCommitLint\Message\Message;

@@ -92,21 +92,17 @@ abstract class PhpCommitLintCommand extends Command
             return false;
         }
 
+        // From the CWD towards the root of the system, locate any
+        // .php-commit-lint.json files, returns the first one found
         $dirs = [];
-
-        // Get all the directories to check, from the CWD towards the root of the system
         do {
             $dirs[] = $target;
+            $path = $target . '/.php-commit-lint.json';
+            if ($this->filesystem->exists($path)) {
+                return $path;
+            }
             $target = dirname($target);
         } while (!in_array($target, $dirs, true));
-
-        // Return the first .php-commit-lint.json files found
-        foreach ($dirs as $dir) {
-            $target = $dir . '/.php-commit-lint.json';
-            if ($this->filesystem->exists($target)) {
-                return $target;
-            }
-        }
 
         // Return false if not found
         return false;

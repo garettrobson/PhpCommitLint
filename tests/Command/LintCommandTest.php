@@ -15,7 +15,7 @@ use GarettRobson\PhpCommitLint\Command\ConfigCommand;
 use GarettRobson\PhpCommitLint\Message\MessageParser;
 use GarettRobson\PhpCommitLint\Validation\LineLengthRule;
 use GarettRobson\PhpCommitLint\Validation\PropertySetRule;
-use GarettRobson\PhpCommitLint\Application\LintApplication;
+use GarettRobson\PhpCommitLint\Application\PhpCommitLintApplication;
 use GarettRobson\PhpCommitLint\Validation\PropertyRegexRule;
 use GarettRobson\PhpCommitLint\Message\PatternFileMessageParser;
 use GarettRobson\PhpCommitLint\Validation\PropertyExistenceRule;
@@ -23,7 +23,7 @@ use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
 #[CoversClass(LintCommand::class)]
-#[CoversClass(LintApplication::class)]
+#[CoversClass(PhpCommitLintApplication::class)]
 #[CoversClass(ConventionalCommitsMessageParser::class)]
 #[CoversClass(MessageParser::class)]
 #[CoversClass(PatternFileMessageParser::class)]
@@ -39,7 +39,7 @@ class LintCommandTest extends TestCase
 {
     public function testExecuteWithValidFile(): void
     {
-        $application = new LintApplication();
+        $application = new PhpCommitLintApplication();
 
         $command = $application->find('lint');
         $commandTester = new CommandTester($command);
@@ -55,7 +55,7 @@ class LintCommandTest extends TestCase
 
     public function testExecuteWithInvalidFile(): void
     {
-        $application = new LintApplication();
+        $application = new PhpCommitLintApplication();
 
         $command = $application->find('lint');
         $commandTester = new CommandTester($command);

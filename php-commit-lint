@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 include 'vendor/autoload.php';
 
-use GarettRobson\PhpCommitLint\Application\LintApplication;
+use GarettRobson\PhpCommitLint\Application\PhpCommitLintApplication;
 
-(new LintApplication())
+(new PhpCommitLintApplication())
     ->setDefaultCommand('lint', true)
     ->run()
 ;

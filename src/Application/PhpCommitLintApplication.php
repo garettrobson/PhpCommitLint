@@ -11,11 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use GarettRobson\PhpCommitLint\Command\LintCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
-class LintApplication extends Application
+class PhpCommitLintApplication extends Application
 {
     public function __construct()
     {
-        parent::__construct('git-commit-lint', '0.0.0');
+        parent::__construct('git-commit-lint', 'alpha');
         $this->addCommands([
             new LintCommand(),
             new ConfigCommand(),
@@ -27,6 +27,5 @@ class LintApplication extends Application
         parent::configureIO($input, $output);
         $output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
         $output->getFormatter()->setStyle('text', new OutputFormatterStyle('gray'));
-
     }
 }

@@ -1,6 +1,6 @@
 {
     "ruleSets": {
-        "conventional-commits": {
+        "conventional-commits-basic": {
             "summary-no-leading-spaces": {
                 "type": "property-regex",
                 "parameters": [
@@ -84,6 +84,12 @@
                     "colon_separator",
                     "/^\\s?$/",
                     "There must not be more than 1 space before colon (:) marker"
+                ]
+            },
+            "colon-required": {
+                "type": "property-existence",
+                "parameters": [
+                    "colon"
                 ]
             },
 

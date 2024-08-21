@@ -1,6 +1,6 @@
 {
     "ruleSets" : {
-        "basic": {
+        "formatting50-72": {
             "line-length": {
                 "type": "line-length",
                 "parameters": [

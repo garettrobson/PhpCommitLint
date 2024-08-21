@@ -6,7 +6,7 @@
         "rules/conventional-commits-strict.json"
     ],
     "using": [
-        "basic",
-        "conventional-commits"
+        "formatting50-72",
+        "conventional-commits-basic"
     ]
 }

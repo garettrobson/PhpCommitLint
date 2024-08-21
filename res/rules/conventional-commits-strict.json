@@ -1,15 +1,12 @@
 {
     "ruleSets": {
-        "strict": {
-            "scope-separator-required": {
+        "conventional-commits-strict": {
+            "description-separator-required": {
                 "type": "property-existence",
                 "parameters": [
-                    "scope_separator",
-                    false,
-                    "Must include a space between type and scope"
+                    "description_separator"
                 ]
             },
-
             "description-upper": {
                 "type": "property-regex",
                 "parameters": [

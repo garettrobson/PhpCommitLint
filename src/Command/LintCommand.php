@@ -107,7 +107,6 @@ HELP)
      */
     public function getRules(): array
     {
-
         $rules = [];
         foreach ($this->validationConfiguration->getRules() as $rule) {
             $class = $rule->class;

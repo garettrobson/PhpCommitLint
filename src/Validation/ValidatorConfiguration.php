@@ -53,7 +53,6 @@ class ValidatorConfiguration
                     $includePath :
                     Path::makeAbsolute($includePath, dirname(realpath($path)))
                 ;
-                var_dump($includePath);
                 $this->includeFile($includePath, $included);
             }
         }

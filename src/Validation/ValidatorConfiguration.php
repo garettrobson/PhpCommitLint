@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Validation;
 
+use Exception;
 use stdClass;
 use RuntimeException;
 use Swaggest\JsonDiff\JsonPatch;
@@ -39,9 +40,22 @@ class ValidatorConfiguration
         return $this->types;
     }
 
+    /**
+     * @param string $path
+     * @param array<string> $included
+     * @return array<string>
+     */
     public function includeFile(string $path, array &$included = []): array
     {
         $path = Path::canonicalize($path);
+        $realPath = realpath($path);
+
+        if(!$realPath) {
+            throw new Exception(sprintf(
+                'Unable to retrieve real path of %s',
+                $path,
+            ));
+        }
 
         $json = $this->filesystem->readfile($path);
         $descriptor = json_decode($json);
@@ -61,7 +75,7 @@ class ValidatorConfiguration
                 $includePath = Path::canonicalize($includePath);
                 $includePath = $this->filesystem->isAbsolutePath($includePath) ?
                     $includePath :
-                    Path::makeAbsolute($includePath, dirname(realpath($path)))
+                    Path::makeAbsolute($includePath, dirname($realPath))
                 ;
                 $this->includeFile($includePath, $included);
             }

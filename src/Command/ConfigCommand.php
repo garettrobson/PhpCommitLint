@@ -60,7 +60,7 @@ class ConfigCommand extends PhpCommitLintCommand
 
             $io->section('Types');
 
-            foreach ($this->validationConfiguration->getTypes() as $typeName => $typeClass) {
+            foreach ((array)$this->validationConfiguration->getTypes() as $typeName => $typeClass) {
 
                 $io->writeln(sprintf(
                     ' <info>[%s]</info> %s',
@@ -77,7 +77,7 @@ class ConfigCommand extends PhpCommitLintCommand
 
             $io->section('Rule sets');
 
-            foreach($this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
+            foreach((array)$this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
 
                 $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
 

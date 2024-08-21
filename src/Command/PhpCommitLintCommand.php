@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Command;
 
+use RuntimeException;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
@@ -41,9 +42,10 @@ abstract class PhpCommitLintCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $includeOptions = $input->getOption('include') ?? [];
         $includes = [
             __DIR__ . '/../../res/rules.json',
-            ...($input->getOption('include') ?? [])
+            ...(array)$includeOptions
         ];
 
         if ($overridePath = $this->getLocalOverridePath()) {
@@ -66,6 +68,12 @@ abstract class PhpCommitLintCommand extends Command
             $io->section('Including files');
         }
         foreach ($includes as $include) {
+            if(!is_string($include)) {
+                throw new RuntimeException(sprintf(
+                    'Expected list of includes to contain strings, received %s',
+                    gettype($include)
+                ));
+            }
             $include = Path::canonicalize($include);
             $include = $this->validationConfiguration->includeFile($include);
             if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {

@@ -77,10 +77,13 @@ class ConfigCommand extends PhpCommitLintCommand
 
         foreach ((array)$this->validationConfiguration->getTypes() as $typeName => $typeClass) {
 
+            $classColor = class_exists($typeClass, true) ? 'text' : 'error';
+
             $io->writeln(sprintf(
-                ' <info>[%s]</info> %s',
+                ' <info>[%s]</info> <%3$s>%s</%3$s>',
                 $typeName,
                 $typeClass,
+                $classColor,
             ));
         }
     }
@@ -91,16 +94,25 @@ class ConfigCommand extends PhpCommitLintCommand
 
         $io->section('Rule sets');
 
+        $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
+
         foreach ((array)$this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
 
             $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
 
             foreach ($ruleSet as $ruleName => $rule) {
 
+                $typeColor = in_array(
+                    $rule->type,
+                    $validTypes,
+                    true
+                ) ? 'text' : 'error';
+
                 $io->writeln(sprintf(
-                    ' <info>[%s]</info> %s (%s)',
+                    ' <info>[%s]</info> <%3$s>%s</%3$s> (%4$s)',
                     $rule->name,
                     $rule->type,
+                    $typeColor,
                     implode(
                         ', ',
                         array_map(
@@ -129,12 +141,21 @@ class ConfigCommand extends PhpCommitLintCommand
     {
         $io->section('Using rules');
 
+        $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
+
         foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
 
+            $typeColor = in_array(
+                $rule->type,
+                $validTypes,
+                true
+            ) ? 'text' : 'error';
+
             $io->writeln(sprintf(
-                '<info>[%s]</info> %s(%s)',
+                '<info>[%s]</info> <%3$s>%s</%3$s> (%4$s)',
                 $ruleName,
                 $rule->type,
+                $typeColor,
                 implode(
                     ', ',
                     array_map(

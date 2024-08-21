@@ -142,10 +142,19 @@ class ValidatorConfiguration
 
     protected function getRuleSet(string $ruleSetName): stdClass
     {
-        $ruleSet = $this->ruleSets->$ruleSetName ?? [];
+        $ruleSet = $this->ruleSets->$ruleSetName ?? false;
+
+        if($ruleSet === false) {
+            throw new RuntimeException(sprintf(
+                'No rule set with name "%s" found',
+                $ruleSetName,
+            ));
+        }
+
         foreach($ruleSet as &$rule) {
             $rule->class = $this->getType($rule->type);
         }
+
         return $ruleSet;
     }
 

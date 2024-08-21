@@ -28,7 +28,7 @@ class LintCommand extends PhpCommitLintCommand
             ->setDescription('Lint a commit message')
             ->setHelp(<<<HELP
 When installed as a composer dependency you can simply symlink the executable to <comment>commit-msg</comment> using:
-<info>ln -s ../../vendor/bin/php-commit-lint .git/hooks/commit-msg</info>
+<info>ln -s ../../vendor/bin/php-commit-lint-commit-msg .git/hooks/commit-msg</info>
 HELP)
             ->addArgument(
                 'file',

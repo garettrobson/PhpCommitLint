@@ -8,7 +8,7 @@ A PHP tool for linting your commit messages.
 
 _The recommended way to use this in development.s_
 
-First change directory to the composer project you want to use `php-commit-link` on.
+First change directory to the composer project you want to use `php-commit-lint` on;
 
 ```sh
 cd /my/project/path
@@ -20,10 +20,10 @@ Require the `garettrobson/php-commit-lint` package as a `--dev` dependency;
 composer req --dev garettrobson/php-commit-lint
 ```
 
-Symlink the `php-commit-lint` executable to the `.git/hooks/commit-msg` file in your repo;
+Symlink the `php-commit-lint-commit-msg` executable to the `.git/hooks/commit-msg` file in your repo;
 
 ```sh
-ln -s ../../vendor/bin/php-commit-lint .git/hooks/commit-msg
+ln -s ../../vendor/bin/php-commit-lint-commit-msg .git/hooks/commit-msg
 ```
 
 Test it works by trying to commit the change with an invalid commit message;

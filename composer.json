@@ -24,6 +24,7 @@
         }
     ],
     "bin": [
+        "php-commit-lint-commit-msg",
         "php-commit-lint"
     ],
     "minimum-stability": "stable",

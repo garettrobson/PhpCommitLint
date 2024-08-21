@@ -1,6 +1,15 @@
 {
     "ruleSets": {
         "strict": {
+            "scope-separator-required": {
+                "type": "property-existence",
+                "parameters": [
+                    "scope_separator",
+                    false,
+                    "Must include a space between type and scope"
+                ]
+            },
+
             "description-upper": {
                 "type": "property-regex",
                 "parameters": [

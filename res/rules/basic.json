@@ -1,9 +1,0 @@
-{
-    "ruleSets" : {
-        "basic": {
-            "line-length": {
-                "type": "line-length"
-            }
-        }
-    }
-}

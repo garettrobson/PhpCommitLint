@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Message;
 
+/**
+ * Define a git commit message parser as a regex expression
+ */
 abstract class MessageParser
 {
     /**
@@ -15,7 +18,7 @@ abstract class MessageParser
      */
     public function __construct(
         protected string $pattern,
-        protected int $flags = PREG_UNMATCHED_AS_NULL
+        protected int $flags = PREG_UNMATCHED_AS_NULL,
     ) {
     }
 

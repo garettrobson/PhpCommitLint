@@ -6,17 +6,18 @@ namespace GarettRobson\PhpCommitLint\Validation;
 
 use GarettRobson\PhpCommitLint\Message\Message;
 
-class PropertyRequiredRule extends PropertyRule
+class PropertyExistenceRule extends PropertyRule
 {
     public function __construct(
         protected string $property,
+        protected bool $exists = true,
         protected string $errorMessage = 'Required %s'
     ) {
     }
 
     public function performValidation(Message $message): self
     {
-        if(!$message->has($this->property)) {
+        if($this->exists ^ $message->has($this->property)) {
             $this->addError(
                 $this->errorMessage,
                 $this->property

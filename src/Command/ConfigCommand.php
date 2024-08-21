@@ -36,7 +36,7 @@ HELP)
 
         $rules = $this->validationConfiguration->getRules();
 
-        $io->section('Using rules:');
+        $io->section('Using rules');
 
         foreach ($rules as $ruleName => $rule) {
             $io->writeln(sprintf(
@@ -46,7 +46,7 @@ HELP)
                 implode(
                     ', ',
                     array_map(
-                        fn($parameter) => sprintf(
+                        fn ($parameter) => sprintf(
                             '<comment>%s</comment>',
                             json_encode($parameter)
                         ),

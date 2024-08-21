@@ -26,6 +26,7 @@ class LintApplication extends Application
     {
         parent::configureIO($input, $output);
         $output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
+        $output->getFormatter()->setStyle('text', new OutputFormatterStyle('gray'));
 
     }
 }

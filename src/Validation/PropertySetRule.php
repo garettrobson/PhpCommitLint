@@ -24,7 +24,7 @@ class PropertySetRule extends PropertyRule
     {
         if (
             $message->has($this->property) &&
-            !in_array($message->get($this->property), $this->set, true)
+            !in_array(trim($message->get($this->property)), $this->set, true)
         ) {
             $this->addError(
                 $this->errorMessage,

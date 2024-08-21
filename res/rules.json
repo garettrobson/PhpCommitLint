@@ -1,7 +1,7 @@
 {
     "includes": [
         "rules/types.json",
-        "rules/basic.json",
+        "rules/formatting50-72.json",
         "rules/strict.json",
         "rules/conventional-commits.json"
     ],

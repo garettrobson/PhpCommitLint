@@ -1,0 +1,13 @@
+{
+    "ruleSets" : {
+        "basic": {
+            "line-length": {
+                "type": "line-length",
+                "parameters": [
+                    [50, 0],
+                    72
+                ]
+            }
+        }
+    }
+}

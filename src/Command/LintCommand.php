@@ -27,7 +27,7 @@ class LintCommand extends PhpCommitLintCommand
         $this
             ->setDescription('Lint a commit message')
             ->setHelp(<<<HELP
-When installed as a composer dependency symlink the executable to <comment>commit-msg</comment> using:
+When installed as a composer dependency you can simply symlink the executable to <comment>commit-msg</comment> using:
 <info>ln -s ../../vendor/bin/php-commit-lint .git/hooks/commit-msg</info>
 HELP)
             ->addArgument(
@@ -48,36 +48,44 @@ HELP)
 
         $file = $input->getArgument('file');
         if(!is_string($file)) {
-            $greetInput = new ArrayInput([
-                '--help'  => true,
-            ]);
             if($application = $this->getApplication()) {
-                return $application->doRun($greetInput, $output);
+                return $application->doRun(
+                    new ArrayInput([
+                        '--help'  => true,
+                    ]),
+                    $output
+                );
             } else {
                 throw new RuntimeException('Failed to retrieve application context');
             }
         }
 
-        $messageText = $this->filesystem->readFile($file);
-        if(!$messageText) {
+        $commitMessage = $this->filesystem->readFile($file);
+        if(!$commitMessage) {
             throw new Exception(sprintf(
                 'No message to parse'
             ));
         }
-        $io->writeln('<info>Input Message:</info>', $io::VERBOSITY_VERY_VERBOSE);
-        $io->writeln(sprintf('<comment>%s</comment>', $messageText), $io::VERBOSITY_VERY_VERBOSE);
+
+        if($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $io->section('Commit message');
+            $io->writeln(sprintf('<text>%s</text>', $commitMessage), );
+        }
 
         $messageParser = new ConventionalCommitsMessageParser();
-        $message = $messageParser->parseMessage($messageText);
+        $message = $messageParser->parseMessage($commitMessage);
 
-
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $io->section('Message');
+            $io->writeln(json_encode($message, JSON_PRETTY_PRINT) ?: '');
+        }
 
         $validator = new Validator($this->getRules());
 
         $errors = $validator->validate($message);
 
         if($errors) {
-            $output->writeln("<error>The following errors occurred:</error>");
+            $io->section("Errors");
             foreach($errors as $error) {
                 $output->writeln(sprintf(
                     '- %s',
@@ -96,7 +104,8 @@ HELP)
     /**
      * @return array<Rule>
      */
-    public function getRules(): array {
+    public function getRules(): array
+    {
 
         $rules = [];
         foreach ($this->validationConfiguration->getRules() as $rule) {

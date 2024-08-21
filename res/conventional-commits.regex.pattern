@@ -1,16 +1,18 @@
 /
 ^
 (?<message>
-	(?<title>
-		(?<type>[^(:!]*)?
-		(?:
-			\(
-			(?<scope>[^)]*)
-			\)
+	(?<summary>
+		(?<type>[^(\[{]+)?
+		(?<scope_outer>
+			(?<scope_start>[(\[{])
+			(?<scope>[^)}\]]*)?
+			(?<scope_end>[)\]}])?
 		)?
+		(?<breaking_separator>\s+)?
 		(?<breaking>!)?
+		(?<colon_separator>\s+)?
 		(?<colon>:)?
-		(?<description_separator>\s)?
+		(?<description_separator>\s+)?
 		(?<description>[^\n$]*)?
 	)\n?
 	(?<body>.+)?

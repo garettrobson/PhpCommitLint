@@ -1,16 +1,19 @@
 {
     "ruleSets": {
         "conventional-commits": {
-            "type-required": {
-                "type": "property-required",
+            "summary-no-leading-spaces": {
+                "type": "property-regex",
                 "parameters": [
-                    "type"
+                    "summary",
+                    "/^\\s*/",
+                    "Summary can not start with a space"
                 ]
             },
-            "description-required": {
-                "type": "property-required",
+
+            "type-required": {
+                "type": "property-existence",
                 "parameters": [
-                    "description"
+                    "type"
                 ]
             },
             "type-set": {
@@ -29,6 +32,30 @@
                         "perf",
                         "test"
                     ]
+                ]
+            },
+
+            "scope-separator-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "scope_separator",
+                    "/^\\s?$/",
+                    "There must not be more than 1 space between type and scope"
+                ]
+            },
+
+            "type-excess-space-rejected": {
+                "type": "property-existence",
+                "parameters": [
+                    "type_excess_space",
+                    false,
+                    "Must not include excessive space after type"
+                ]
+            },
+            "description-required": {
+                "type": "property-existence",
+                "parameters": [
+                    "description"
                 ]
             }
         }

@@ -42,10 +42,9 @@ abstract class PhpCommitLintCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $includes = [
-            __DIR__ . '/../../res/rules.json'
+            __DIR__ . '/../../res/rules.json',
+            ...($input->getOption('include') ?? [])
         ];
-
-        array_push($includes, ...($input->getOption('include') ?? []));
 
         if ($overridePath = $this->getLocalOverridePath()) {
             $includes[] = $overridePath;

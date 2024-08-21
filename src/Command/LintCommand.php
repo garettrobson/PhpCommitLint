@@ -64,7 +64,8 @@ HELP)
         $commitMessage = $this->filesystem->readFile($file);
         if(!$commitMessage) {
             throw new Exception(sprintf(
-                'No message to parse'
+                'No message to parse in %s',
+                $file
             ));
         }
 

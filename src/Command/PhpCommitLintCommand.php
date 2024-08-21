@@ -70,7 +70,7 @@ abstract class PhpCommitLintCommand extends Command
             $include = $this->validationConfiguration->includeFile($include);
             if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
                 foreach($include as $path) {
-                    $io->writeln($path);
+                    $io->writeln(sprintf('<text>%s</text>', $path));
                 }
             }
         }

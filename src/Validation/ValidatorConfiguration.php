@@ -29,6 +29,16 @@ class ValidatorConfiguration
         $this->ruleSets = new stdClass();
     }
 
+    public function getRuleSets(): stdClass
+    {
+        return $this->ruleSets;
+    }
+
+    public function getTypes(): stdClass
+    {
+        return $this->types;
+    }
+
     public function includeFile(string $path, array &$included = []): array
     {
         $path = Path::canonicalize($path);

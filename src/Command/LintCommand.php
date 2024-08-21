@@ -118,8 +118,7 @@ HELP)
                     'Expected class type of string, received %s',
                     gettype($class),
                 ));
-            }
-            if (!class_exists($class, true)) {
+            } elseif (!class_exists($class, true)) {
                 throw new RuntimeException(sprintf(
                     'Class %s does not exist',
                     $class,

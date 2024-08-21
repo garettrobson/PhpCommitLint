@@ -90,7 +90,7 @@ class ConfigCommand extends PhpCommitLintCommand
                         implode(
                             ', ',
                             array_map(
-                                fn($parameter) => sprintf(
+                                fn ($parameter) => sprintf(
                                     '<comment>%s</comment>',
                                     json_encode($parameter)
                                 ),
@@ -125,7 +125,7 @@ class ConfigCommand extends PhpCommitLintCommand
                     implode(
                         ', ',
                         array_map(
-                            fn($parameter) => sprintf(
+                            fn ($parameter) => sprintf(
                                 '<comment>%s</comment>',
                                 json_encode($parameter)
                             ),

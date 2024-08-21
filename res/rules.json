@@ -2,8 +2,8 @@
     "includes": [
         "rules/types.json",
         "rules/formatting50-72.json",
-        "rules/strict.json",
-        "rules/conventional-commits.json"
+        "rules/conventional-commits-basic.json",
+        "rules/conventional-commits-strict.json"
     ],
     "using": [
         "basic",

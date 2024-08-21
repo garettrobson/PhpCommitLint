@@ -1,0 +1,115 @@
+{
+    "ruleSets": {
+        "conventional-commits": {
+            "summary-no-leading-spaces": {
+                "type": "property-regex",
+                "parameters": [
+                    "summary",
+                    "/^\\s*/",
+                    "Summary can not have leading spaces"
+                ]
+            },
+
+            "type-required": {
+                "type": "property-existence",
+                "parameters": [
+                    "type"
+                ]
+            },
+            "type-set": {
+                "type": "property-set",
+                "parameters": [
+                    "type",
+                    [
+                        "fix",
+                        "feat",
+                        "build",
+                        "chore",
+                        "ci",
+                        "docs",
+                        "style",
+                        "refactor",
+                        "perf",
+                        "test"
+                    ]
+                ]
+            },
+
+            "type-separator-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "type_separator",
+                    "/^\\s?$/",
+                    "There must not be more than 1 space between type and scope"
+                ]
+            },
+
+            "scope-outer-brackets": {
+                "type": "property-regex",
+                "parameters": [
+                    "scope_outer",
+                    "/^(\\(.*\\)|\\[.*\\]|{.*}|<.*>)?$/",
+                    "Scope must using matching brackets"
+                ]
+            },
+            "scope-start-separator-brackets": {
+                "type": "property-regex",
+                "parameters": [
+                    "scope_start_separator",
+                    "/^$/",
+                    "Scope must not start with space"
+                ]
+            },
+            "scope-end-separator-brackets": {
+                "type": "property-regex",
+                "parameters": [
+                    "scope_end_separator",
+                    "/^$/",
+                    "Scope must not end with spaces"
+                ]
+            },
+
+            "breaking-separator-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "breaking_separator",
+                    "/^\\s?$/",
+                    "There must not be more than 1 space before breaking change (!) marker"
+                ]
+            },
+
+            "colon-separator-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "colon_separator",
+                    "/^\\s?$/",
+                    "There must not be more than 1 space before colon (:) marker"
+                ]
+            },
+
+            "description-separator-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "description_separator",
+                    "/^\\s?$/",
+                    "There must not be more than 1 space before description"
+                ]
+            },
+
+            "description-required": {
+                "type": "property-existence",
+                "parameters": [
+                    "description"
+                ]
+            },
+            "description-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "description",
+                    "/^\\w+/",
+                    "Description must start with a valid word character"
+                ]
+            }
+        }
+    }
+}

@@ -1,19 +1,43 @@
 /
+(?(DEFINE)
+	(?<type_words_character>[^\s\b({\[<!:])
+	(?<type_words>(
+		(?P>type_words_character)
+		(?:(?P>type_words_character)|[ ]+(?P>type_words_character))*)
+	)
+	(?<scope_words_character>[^\s\b)}\]>])
+	(?<scope_words>(
+		(?P>scope_words_character)
+		(?:(?P>scope_words_character)|[ ]+(?P>scope_words_character))*)
+	)
+)
 ^
 (?<message>
+	(?<summary_separator>[ \t]+)?
 	(?<summary>
-		(?<type>[^(\[{]+)?
+		(?:
+			(?<type>(?P>type_words))?
+			(?<type_separator>[ \t]+)?
+		)?
 		(?<scope_outer>
 			(?<scope_start>[(\[{])
-			(?<scope>[^)}\]]*)?
-			(?<scope_end>[)\]}])?
+			(?<scope_start_separator>[ \t]+)?
+			(?<scope>(?P>scope_words))
+			(?<scope_end_separator>[ \t]+)?
+			(?<scope_end>[)\]}])
 		)?
-		(?<breaking_separator>\s+)?
-		(?<breaking>!)?
-		(?<colon_separator>\s+)?
-		(?<colon>:)?
-		(?<description_separator>\s+)?
-		(?<description>[^\n$]*)?
+		(?:
+			(?<breaking_separator>[ \t]+)?
+			(?<breaking>!)
+		)?
+		(?:
+			(?<colon_separator>[ \t]+)?
+			(?<colon>:)
+		)?
+		(?:
+			(?<description_separator>[ \t]+)?
+			(?<description>[^\n$]*)
+		)?
 	)\n?
 	(?<body>.+)?
 )

@@ -25,7 +25,6 @@ abstract class MessageParser
     {
         preg_match($this->pattern, $message, $matches, $this->flags);
 
-        // @var array<string, string> $matches
         return new Message($matches);
     }
 }

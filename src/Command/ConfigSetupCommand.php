@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Command;
 
+use RuntimeException;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -55,7 +55,6 @@ class ConfigSetupCommand extends PhpCommitLintCommand
     {
         parent::execute($input, $output);
         $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
 
         $io->title('PHP Commit Lint: Setup');
 
@@ -121,8 +120,6 @@ class ConfigSetupCommand extends PhpCommitLintCommand
             return is_string($targetDirectory) ? $targetDirectory : null;
         }
 
-        $helper = $this->getHelper('question');
-
         $directoryChoices = array_filter([
             'override' => $this->findLocalFile('.php-commit-lint.json', false),
             'repository' => $this->findLocalFile('.git', false),
@@ -139,8 +136,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
             '0'
         );
 
-        /** @var QuestionHelper $helper */
-        $answer = $helper->ask($input, $output, $question);
+        $answer = $io->askQuestion($question);
 
         switch ($answer) {
             case 'q':
@@ -152,10 +148,17 @@ class ConfigSetupCommand extends PhpCommitLintCommand
                     $inputPath = preg_replace('%(/|^)[^/]*$%', '$1', $userInput);
                     $inputPath = '' === $inputPath ? '.' : $inputPath;
 
+                    if(!is_string($inputPath)) {
+                        throw new RuntimeException(sprintf(
+                            'Auto suggest callback expected a string input path, received %s',
+                            gettype($inputPath),
+                        ));
+                    }
+
                     // CAUTION - this example code allows unrestricted access to the
                     // entire filesystem. In real applications, restrict the directories
                     // where files and dirs can be found
-                    $foundFilesAndDirs = @scandir($inputPath) ?: [];
+                    $foundFilesAndDirs = scandir($inputPath) ?: [];
 
                     return array_map(function (string $dirOrFile) use ($inputPath): string {
                         return $inputPath . $dirOrFile;
@@ -169,13 +172,21 @@ class ConfigSetupCommand extends PhpCommitLintCommand
 
                 $question->setAutocompleterCallback($callback);
 
-                /** @var QuestionHelper $helper */
-                //$answer = $heio->ask($input, $output, $question);
                 $answer = $io->askQuestion($question);
 
-                $this->filesystem->isAbsolutePath($answer);
+                if($answer === null) {
+                    return null;
+                } elseif(!is_string($answer)) {
+                    throw new RuntimeException(sprintf(
+                        'Expected user input path to be string, received %s',
+                        gettype($answer),
+                    ));
+                }
 
-                return is_string($answer) ? $answer : null;
+                return $this->filesystem->isAbsolutePath($answer) ?
+                    $answer :
+                    (getcwd() ? Path::makeAbsolute($answer, getcwd()) : null)
+                ;
             default:
                 return $directoryChoices[$answer];
         }
@@ -193,8 +204,6 @@ class ConfigSetupCommand extends PhpCommitLintCommand
             return is_array($ruleSets) ? $ruleSets : null;
         }
 
-        $helper = $this->getHelper('question');
-
         $ruleSetChoices = array_keys(get_object_vars($this->validationConfiguration->getRuleSets()));
         array_unshift($ruleSetChoices, '');
         unset($ruleSetChoices[0]);
@@ -205,9 +214,8 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         );
         $question->setMultiselect(true);
 
-        /** @var QuestionHelper $helper */
         /** @var array<string> $answer */
-        $answer = (array)$helper->ask($input, $output, $question);
+        $answer = (array)$io->askQuestion($question);
         return $answer;
     }
 

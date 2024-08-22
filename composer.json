@@ -37,7 +37,7 @@
         "check": [
             "@lint",
             "@analyse",
-            "@test"
+            "@coverage-html"
         ],
         "test": "phpunit",
         "coverage-html": "XDEBUG_MODE=coverage phpunit --coverage-html .html-coverage",

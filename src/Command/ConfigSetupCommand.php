@@ -10,7 +10,6 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\AnsiColorMode;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -147,10 +146,36 @@ class ConfigSetupCommand extends PhpCommitLintCommand
             case 'q':
                 return null;
             case '.':
-                $answer = $io->askQuestion(new Question(
-                    'Specify where the .php-commit-lint.json file should be created',
+                $callback = function (string $userInput): array {
+                    // Strip any characters from the last slash to the end of the string
+                    // to keep only the last directory and generate suggestions for it
+                    $inputPath = preg_replace('%(/|^)[^/]*$%', '$1', $userInput);
+                    $inputPath = '' === $inputPath ? '.' : $inputPath;
+
+                    // CAUTION - this example code allows unrestricted access to the
+                    // entire filesystem. In real applications, restrict the directories
+                    // where files and dirs can be found
+                    $foundFilesAndDirs = @scandir($inputPath) ?: [];
+
+                    return array_map(function (string $dirOrFile) use ($inputPath): string {
+                        return $inputPath . $dirOrFile;
+                    }, $foundFilesAndDirs);
+                };
+
+                $question = new Question(sprintf(
+                    "Specify where the .php-commit-lint.json file should be created\nCan be relative to <comment>%s</comment>",
+                    getcwd(),
                 ));
-                return is_string($answer) ? $answer : '';
+
+                $question->setAutocompleterCallback($callback);
+
+                /** @var QuestionHelper $helper */
+                //$answer = $heio->ask($input, $output, $question);
+                $answer = $io->askQuestion($question);
+
+                $this->filesystem->isAbsolutePath($answer);
+
+                return is_string($answer) ? $answer : null;
             default:
                 return $directoryChoices[$answer];
         }

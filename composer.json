@@ -29,14 +29,24 @@
     ],
     "minimum-stability": "stable",
     "scripts": {
+        "check-short": [
+            "@lint -q",
+            "@analyse -q",
+            "@test --no-output"
+        ],
+        "check": [
+            "@lint",
+            "@analyse",
+            "@test"
+        ],
         "test": "phpunit",
         "coverage-html": "XDEBUG_MODE=coverage phpunit --coverage-html .html-coverage",
         "lint":[
             "@lint-src",
             "@lint-tests"
         ],
-        "analyse": "phpstan analyse -l9 tests/ src/",
         "lint-src": "php-cs-fixer fix src",
-        "lint-tests": "php-cs-fixer fix tests"
+        "lint-tests": "php-cs-fixer fix tests",
+        "analyse": "phpstan analyse -l9 tests/ src/"
     }
 }

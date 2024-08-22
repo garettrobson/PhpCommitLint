@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GarettRobson\PhpCommitLint\Command;
 
 use RuntimeException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -41,14 +42,14 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         $targetDir = false;
 
         $autoDetectDirectories = array_filter([
-            'Found a .php-commit-lint.json file in %s, should we override it?' => $this->findLocalFile('.php-commit-lint.json'),
-            'Found a .git repo in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('.git'),
-            'Found a composer.json file in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('composer.json'),
+            'Found a .php-commit-lint.json file in %s, should we override it?' => $this->findLocalFile('.php-commit-lint.json', false),
+            'Found a .git repo in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('.git', false),
+            'Found a composer.json file in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('composer.json', false),
             'Current directory is %s, should we create a .php-commit-lint.json file here?' => getcwd(),
         ]);
 
         foreach($autoDetectDirectories as $questionText => $directory) {
-            $directory = dirname($directory);
+            $directory = $directory;
 
             if($targetDir = $io->askQuestion(new ConfirmationQuestion(
                 sprintf($questionText, $directory)

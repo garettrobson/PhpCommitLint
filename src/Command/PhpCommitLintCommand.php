@@ -83,12 +83,12 @@ abstract class PhpCommitLintCommand extends Command
         $io->writeln('', $io::VERBOSITY_VERBOSE);
     }
 
-    protected function findLocalFile(string $file): string|false
+    protected function findLocalFile(string $file, bool $returnIncludeFilename = true): string|false
     {
 
-        $target = getcwd();
+        $targetDirectory = getcwd();
 
-        if ($target === false) {
+        if ($targetDirectory === false) {
             return false;
         }
 
@@ -96,13 +96,13 @@ abstract class PhpCommitLintCommand extends Command
         // .php-commit-lint.json files, returns the first one found
         $dirs = [];
         do {
-            $dirs[] = $target;
-            $path = $target . DIRECTORY_SEPARATOR . $file;
-            if ($this->filesystem->exists($path)) {
-                return $path;
+            $dirs[] = $targetDirectory;
+            $targetFile = $targetDirectory . DIRECTORY_SEPARATOR . $file;
+            if ($this->filesystem->exists($targetFile)) {
+                return $returnIncludeFilename ? $targetFile : $targetDirectory;
             }
-            $target = dirname($target);
-        } while (!in_array($target, $dirs, true));
+            $targetDirectory = dirname($targetDirectory);
+        } while (!in_array($targetDirectory, $dirs, true));
 
         // Return false if not found
         return false;

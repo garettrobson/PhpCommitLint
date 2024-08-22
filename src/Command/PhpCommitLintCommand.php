@@ -40,6 +40,12 @@ abstract class PhpCommitLintCommand extends Command
                 InputOption::VALUE_NONE,
                 'Do not load any local overrides'
             )
+            ->addOption(
+                'no-home',
+                'H',
+                InputOption::VALUE_NONE,
+                'Do not load any local overrides'
+            )
         ;
     }
 
@@ -53,6 +59,10 @@ abstract class PhpCommitLintCommand extends Command
             ...(array) $includePaths,
         ];
 
+        if (!$input->getOption('no-home')) {
+            $this->includeHomeOverridePath($io, $includes);
+        }
+
         if (!$input->getOption('no-override')) {
             $this->includeLocalOverridePath($io, $includes);
         }
@@ -60,6 +70,40 @@ abstract class PhpCommitLintCommand extends Command
         $this->prepareValidatorConfiguration($io, $includes);
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Undocumented function.
+     *
+     * @param array<string> $includes
+     */
+    protected function includeHomeOverridePath(SymfonyStyle $io, array &$includes): void
+    {
+        $home = Path::getHomeDirectory();
+
+        if (!$home) {
+            return;
+        }
+
+        $targetFile = Path::makeAbsolute('.php-commit-lint.json', $home);
+
+        if ($this->filesystem->exists($targetFile)) {
+            $includes[] = $targetFile;
+
+            $io->writeln(
+                sprintf(
+                    '<info>Using home override:</info> <comment>%s</comment>',
+                    $targetFile
+                ),
+                $io::VERBOSITY_VERBOSE
+            );
+        } else {
+            $io->writeln(
+                '<comment>No local override found</comment>',
+                $io::VERBOSITY_VERBOSE
+            );
+        }
+        $io->writeln('', $io::VERBOSITY_VERBOSE);
     }
 
     /**

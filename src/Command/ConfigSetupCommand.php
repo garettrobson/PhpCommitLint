@@ -198,7 +198,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
 
         // askTargetDirectory returns null to signal termination
         if (null === $targetDirectory) {
-            $this->stop($io);
+            return $this->stop($io);
         }
 
         $io->writeln(sprintf(

@@ -209,7 +209,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         unset($ruleSetChoices[0]);
 
         $question = new ChoiceQuestion(
-            'Which rule sets would you like to use? (Enter numbers separated by commas',
+            'Which rule sets would you like to use? (Enter numbers separated by commas)',
             $ruleSetChoices,
         );
         $question->setMultiselect(true);

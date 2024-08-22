@@ -14,12 +14,13 @@ use GarettRobson\PhpCommitLint\Validation\Validator;
 use GarettRobson\PhpCommitLint\Command\ConfigCommand;
 use GarettRobson\PhpCommitLint\Message\MessageParser;
 use GarettRobson\PhpCommitLint\Validation\LineLengthRule;
+use GarettRobson\PhpCommitLint\Command\ConfigSetupCommand;
 use GarettRobson\PhpCommitLint\Validation\PropertySetRule;
-use GarettRobson\PhpCommitLint\Application\PhpCommitLintApplication;
 use GarettRobson\PhpCommitLint\Validation\PropertyRegexRule;
 use GarettRobson\PhpCommitLint\Message\PatternFileMessageParser;
 use GarettRobson\PhpCommitLint\Validation\PropertyExistenceRule;
 use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
+use GarettRobson\PhpCommitLint\Application\PhpCommitLintApplication;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 
 #[CoversClass(LintCommand::class)]
@@ -35,6 +36,7 @@ use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 #[CoversClass(ConfigCommand::class)]
 #[CoversClass(ValidatorConfiguration::class)]
 #[CoversClass(PropertyRegexRule::class)]
+#[CoversClass(ConfigSetupCommand::class)]
 class ConfigCommandTest extends TestCase
 {
     public function testExecute(): void

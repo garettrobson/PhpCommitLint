@@ -46,6 +46,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
             'Found a .git repo in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('.git', false),
             'Found a composer.json file in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('composer.json', false),
             'Current directory is %s, should we create a .php-commit-lint.json file here?' => getcwd(),
+            'Your home directory is %s, should we create a .php-commit-lint.json file here?' => Path::getHomeDirectory(),
         ]);
 
         foreach($autoDetectDirectories as $questionText => $directory) {

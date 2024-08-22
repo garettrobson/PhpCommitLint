@@ -9,13 +9,13 @@ namespace GarettRobson\PhpCommitLint\Message;
  */
 abstract class PatternFileMessageParser extends MessageParser
 {
-    public function __construct(string $patternPath, int $flags = PREG_UNMATCHED_AS_NULL)
+    public function __construct(string $patternFile, int $flags = PREG_UNMATCHED_AS_NULL)
     {
-        $pattern = file_get_contents($patternPath);
+        $pattern = file_get_contents($patternFile);
         if (false === $pattern) {
             throw new \RuntimeException(sprintf(
                 'Failed to load pattern file %s',
-                $patternPath
+                $patternFile
             ));
         }
         parent::__construct($pattern, $flags);

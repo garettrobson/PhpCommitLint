@@ -7,7 +7,7 @@ namespace GarettRobson\PhpCommitLint\Message;
 /**
  * A git commit message parser, but it loads the pattern from a file.
  */
-abstract class PatternFileMessageParser extends MessageParser
+class PatternFileMessageParser extends MessageParser
 {
     public function __construct(string $patternFile, int $flags = PREG_UNMATCHED_AS_NULL)
     {

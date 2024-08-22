@@ -7,7 +7,7 @@ namespace GarettRobson\PhpCommitLint\Message;
 /**
  * Define a git commit message parser as a regex expression.
  */
-abstract class MessageParser
+class MessageParser
 {
     /**
      * Parse a commit message using a specified regex pattern.

@@ -64,7 +64,7 @@ abstract class PhpCommitLintCommand extends Command
      */
     protected function includeLocalOverridePath(SymfonyStyle $io, array &$includes)
     {
-        if ($overridePath = $this->getLocalOverridePath()) {
+        if ($overridePath = $this->findLocalFile('.php-commit-lint.json')) {
             $includes[] = $overridePath;
 
             $io->writeln(
@@ -83,7 +83,7 @@ abstract class PhpCommitLintCommand extends Command
         $io->writeln('', $io::VERBOSITY_VERBOSE);
     }
 
-    protected function getLocalOverridePath(): string|false
+    protected function findLocalFile(string $file): string|false
     {
 
         $target = getcwd();
@@ -97,7 +97,7 @@ abstract class PhpCommitLintCommand extends Command
         $dirs = [];
         do {
             $dirs[] = $target;
-            $path = $target . '/.php-commit-lint.json';
+            $path = $target . DIRECTORY_SEPARATOR . $file;
             if ($this->filesystem->exists($path)) {
                 return $path;
             }

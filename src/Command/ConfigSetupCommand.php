@@ -180,12 +180,14 @@ class ConfigSetupCommand extends PhpCommitLintCommand
                         'Expected user input path to be string, received %s',
                         gettype($answer),
                     ));
+                } elseif($this->filesystem->isAbsolutePath($answer)) {
+                    return $answer;
+                } elseif($cwd = getcwd()) {
+                    return Path::makeAbsolute($answer, $cwd);
+                } else {
+                    return null;
                 }
 
-                return $this->filesystem->isAbsolutePath($answer) ?
-                    $answer :
-                    (getcwd() ? Path::makeAbsolute($answer, getcwd()) : null)
-                ;
             default:
                 return $directoryChoices[$answer];
         }

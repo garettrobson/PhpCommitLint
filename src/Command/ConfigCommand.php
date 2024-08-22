@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Command;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ConfigCommand extends PhpCommitLintCommand
 {
@@ -47,7 +47,6 @@ class ConfigCommand extends PhpCommitLintCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $io = new SymfonyStyle($input, $output);
 
         $io->title('PHP Commit Lint: Config');
@@ -62,7 +61,7 @@ class ConfigCommand extends PhpCommitLintCommand
             $this->displayRuleSets($io);
         }
 
-        if($input->getOption('using') || $this->executeDefault) {
+        if ($input->getOption('using') || $this->executeDefault) {
             $this->displayUsing($io);
         }
 
@@ -75,8 +74,7 @@ class ConfigCommand extends PhpCommitLintCommand
 
         $io->section('Types');
 
-        foreach ((array)$this->validationConfiguration->getTypes() as $typeName => $typeClass) {
-
+        foreach ((array) $this->validationConfiguration->getTypes() as $typeName => $typeClass) {
             $classColor = class_exists($typeClass, true) ? 'text' : 'error';
 
             $io->writeln(sprintf(
@@ -96,12 +94,10 @@ class ConfigCommand extends PhpCommitLintCommand
 
         $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
 
-        foreach ((array)$this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
-
+        foreach ((array) $this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
             $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
 
             foreach ($ruleSet as $ruleName => $rule) {
-
                 $typeColor = in_array(
                     $rule->type,
                     $validTypes,
@@ -144,7 +140,6 @@ class ConfigCommand extends PhpCommitLintCommand
         $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
 
         foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
-
             $typeColor = in_array(
                 $rule->type,
                 $validTypes,
@@ -185,6 +180,5 @@ class ConfigCommand extends PhpCommitLintCommand
                 ));
             }
         }
-
     }
 }

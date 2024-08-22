@@ -19,8 +19,8 @@ class PropertyRegexRule extends PropertyRule
     public function performValidation(Message $message): self
     {
         if (
-            $message->has($this->property) &&
-            !preg_match($this->pattern, $message->get($this->property))
+            $message->has($this->property)
+            && !preg_match($this->pattern, $message->get($this->property))
         ) {
             $this->addError(
                 $this->errorMessage,

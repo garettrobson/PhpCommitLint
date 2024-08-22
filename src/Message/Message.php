@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Message;
 
-use JsonSerializable;
-use RuntimeException;
 use Psr\Container\ContainerInterface;
 
 /**
  * Represents a parsed git commit message, mostly by holding an array of regex
  * matches, which it makes accessible via ContainerInterface's get and has
- * methods
+ * methods.
  *
  * Notes: I'm unsure if message is necessary as it only offers access to the
  * underlying array of matches. Similarly unsure if it should make use of
  * ArrayAccess, ArrayObject, or even Iterator.
  */
-class Message implements ContainerInterface, JsonSerializable
+class Message implements ContainerInterface, \JsonSerializable
 {
     /**
      * @param array<string, string> $matches
@@ -30,27 +28,27 @@ class Message implements ContainerInterface, JsonSerializable
             fn ($match) => is_string($match),
             ARRAY_FILTER_USE_KEY
         );
-
     }
 
     /**
      * Finds a match of the message by its identifier and returns it.
      *
-     * @param string $id Identifier of the match to look for.
+     * @param string $id identifier of the match to look for
      *
-     * @throws MessagePropertyNotFoundException  No match was found for **this** identifier.
+     * @return string entry
      *
-     * @return string Entry.
+     * @throws MessagePropertyNotFoundException no match was found for **this** identifier
      */
     public function get(string $id): string
     {
-        if(!$this->has($id)) {
+        if (!$this->has($id)) {
             throw new MessagePropertyNotFoundException(sprintf(
                 'Attempting to access unset property %s of %s',
                 $id,
                 __METHOD__
             ));
         }
+
         return $this->matches[$id];
     }
 
@@ -61,9 +59,7 @@ class Message implements ContainerInterface, JsonSerializable
      * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
      * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
-     * @param string $id Identifier of the match to look for.
-     *
-     * @return bool
+     * @param string $id identifier of the match to look for
      */
     public function has(string $id): bool
     {
@@ -73,6 +69,7 @@ class Message implements ContainerInterface, JsonSerializable
     public function set(string $id, string $variable): self
     {
         $this->matches[$id] = $variable;
+
         return $this;
     }
 

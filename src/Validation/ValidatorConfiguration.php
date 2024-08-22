@@ -4,45 +4,42 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Validation;
 
-use Exception;
-use stdClass;
-use RuntimeException;
 use Swaggest\JsonDiff\JsonPatch;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 class ValidatorConfiguration
 {
     protected Filesystem $filesystem;
-    protected stdClass $types;
-    protected stdClass $ruleSets;
+    protected \stdClass $types;
+    protected \stdClass $ruleSets;
 
-    /** @var array<stdClass> $patches */
+    /** @var array<\stdClass> */
     protected array $patches = [];
 
-    /** @var array<string> $using */
+    /** @var array<string> */
     protected array $using = [];
 
     public function __construct()
     {
         $this->filesystem = new Filesystem();
-        $this->types = new stdClass();
-        $this->ruleSets = new stdClass();
+        $this->types = new \stdClass();
+        $this->ruleSets = new \stdClass();
     }
 
-    public function getRuleSets(): stdClass
+    public function getRuleSets(): \stdClass
     {
         return $this->ruleSets;
     }
 
-    public function getTypes(): stdClass
+    public function getTypes(): \stdClass
     {
         return $this->types;
     }
 
     /**
-     * @param string $path
      * @param array<string> $included
+     *
      * @return array<string>
      */
     public function includeFile(string $path, array &$included = []): array
@@ -50,18 +47,19 @@ class ValidatorConfiguration
         $path = Path::canonicalize($path);
         $realPath = realpath($path);
 
-        if(!$realPath) {
-            throw new Exception(sprintf(
+        if (!$realPath) {
+            throw new \Exception(sprintf(
                 'Unable to retrieve real path of %s',
                 $path,
             ));
         }
 
         $json = $this->filesystem->readfile($path);
+
         try {
             $descriptor = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
-        } catch(\JsonException $e) {
-            throw new RuntimeException(sprintf(
+        } catch (\JsonException $e) {
+            throw new \RuntimeException(sprintf(
                 'The file %s raised the following JSON error; %s',
                 $path,
                 $e->getMessage(),
@@ -69,8 +67,8 @@ class ValidatorConfiguration
         }
         $included[] = $path;
 
-        if(!is_object($descriptor)) {
-            throw new RuntimeException(sprintf(
+        if (!is_object($descriptor)) {
+            throw new \RuntimeException(sprintf(
                 'Expected object, received %s from decoding %s',
                 gettype($descriptor),
                 $path,
@@ -79,12 +77,10 @@ class ValidatorConfiguration
 
         if ($includes = $descriptor->includes ?? false) {
             foreach ($includes as $includePath) {
-
                 $includePath = Path::canonicalize($includePath);
                 $includePath = $this->filesystem->isAbsolutePath($includePath) ?
                     $includePath :
-                    Path::makeAbsolute($includePath, dirname($realPath))
-                ;
+                    Path::makeAbsolute($includePath, dirname($realPath));
                 $this->includeFile($includePath, $included);
             }
         }
@@ -97,10 +93,10 @@ class ValidatorConfiguration
             array_push($this->patches, ...$patches);
         }
 
-        if($types = $descriptor->types ?? false) {
-            $this->types = (object)array_merge(
-                (array)$this->types,
-                (array)$types,
+        if ($types = $descriptor->types ?? false) {
+            $this->types = (object) array_merge(
+                (array) $this->types,
+                (array) $types,
             );
         }
 
@@ -112,9 +108,9 @@ class ValidatorConfiguration
                     $rule->from = $ruleSetName;
                 }
             }
-            $this->ruleSets = (object)array_merge(
-                (array)$this->ruleSets,
-                (array)$ruleSets,
+            $this->ruleSets = (object) array_merge(
+                (array) $this->ruleSets,
+                (array) $ruleSets,
             );
         }
 
@@ -122,36 +118,36 @@ class ValidatorConfiguration
     }
 
     /**
-     * @return array<stdClass>
+     * @return array<\stdClass>
      */
     public function getRules(): array
     {
-        $rules = new stdClass();
-        foreach($this->using as $ruleSetName) {
-            $rules = (object)array_merge(
-                (array)$rules,
-                (array)$this->getRuleSet($ruleSetName)
+        $rules = new \stdClass();
+        foreach ($this->using as $ruleSetName) {
+            $rules = (object) array_merge(
+                (array) $rules,
+                (array) $this->getRuleSet($ruleSetName)
             );
         }
 
         $patch = JsonPatch::import($this->patches);
         $patch->apply($rules, true);
 
-        return (array)$rules;
+        return (array) $rules;
     }
 
-    protected function getRuleSet(string $ruleSetName): stdClass
+    protected function getRuleSet(string $ruleSetName): \stdClass
     {
-        $ruleSet = $this->ruleSets->$ruleSetName ?? false;
+        $ruleSet = $this->ruleSets->{$ruleSetName} ?? false;
 
-        if($ruleSet === false) {
-            throw new RuntimeException(sprintf(
+        if (false === $ruleSet) {
+            throw new \RuntimeException(sprintf(
                 'No rule set with name "%s" found',
                 $ruleSetName,
             ));
         }
 
-        foreach($ruleSet as &$rule) {
+        foreach ($ruleSet as &$rule) {
             $rule->class = $this->getType($rule->type);
         }
 
@@ -160,6 +156,6 @@ class ValidatorConfiguration
 
     protected function getType(string $typeName): string
     {
-        return $this->types->$typeName ?? $typeName;
+        return $this->types->{$typeName} ?? $typeName;
     }
 }

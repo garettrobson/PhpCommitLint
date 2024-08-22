@@ -8,7 +8,7 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 abstract class Rule
 {
-    /** @var array<string> $errors */
+    /** @var array<string> */
     protected array $errors = [];
 
     /**
@@ -26,13 +26,12 @@ abstract class Rule
     public function resetErrors(): self
     {
         $this->errors = [];
+
         return $this;
     }
 
     /**
-     * @param string $errorMessage
-     * @param bool|float|int|string|null ...$arguments
-     * @return self
+     * @param null|bool|float|int|string ...$arguments
      */
     public function addError(string $errorMessage, ...$arguments): self
     {
@@ -58,5 +57,4 @@ abstract class Rule
     }
 
     abstract public function performValidation(Message $message): self;
-
 }

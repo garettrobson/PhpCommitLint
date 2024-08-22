@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Application;
 
-use Symfony\Component\Console\Application;
-use GarettRobson\PhpCommitLint\Command\LintCommand;
-use Symfony\Component\Console\Input\InputInterface;
 use GarettRobson\PhpCommitLint\Command\ConfigCommand;
-use Symfony\Component\Console\Output\OutputInterface;
 use GarettRobson\PhpCommitLint\Command\ConfigSetupCommand;
+use GarettRobson\PhpCommitLint\Command\LintCommand;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class PhpCommitLintApplication extends Application
 {

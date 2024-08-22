@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Command;
 
-use RuntimeException;
-use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 abstract class PhpCommitLintCommand extends Command
 {
@@ -44,23 +43,20 @@ abstract class PhpCommitLintCommand extends Command
 
         $includePaths = $input->getOption('include') ?? [];
         $includes = [
-            __DIR__ . '/../../res/rules.json',
-            ...(array)$includePaths
+            __DIR__.'/../../res/rules.json',
+            ...(array) $includePaths,
         ];
 
         $this->includeLocalOverridePath($io, $includes);
         $this->prepareValidatorConfiguration($io, $includes);
 
         return self::SUCCESS;
-
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param SymfonyStyle $io
      * @param array<string> $includes
-     * @return void
      */
     protected function includeLocalOverridePath(SymfonyStyle $io, array &$includes)
     {
@@ -70,7 +66,7 @@ abstract class PhpCommitLintCommand extends Command
             $io->writeln(
                 sprintf(
                     '<info>Using local override:</info> <comment>%s</comment>',
-                    Path::makeRelative($overridePath, (string)getcwd())
+                    Path::makeRelative($overridePath, (string) getcwd())
                 ),
                 $io::VERBOSITY_VERBOSE
             );
@@ -83,12 +79,11 @@ abstract class PhpCommitLintCommand extends Command
         $io->writeln('', $io::VERBOSITY_VERBOSE);
     }
 
-    protected function findLocalFile(string $file, bool $returnIncludeFilename = true): string|false
+    protected function findLocalFile(string $file, bool $returnIncludeFilename = true): false|string
     {
-
         $targetDirectory = getcwd();
 
-        if ($targetDirectory === false) {
+        if (false === $targetDirectory) {
             return false;
         }
 
@@ -97,7 +92,7 @@ abstract class PhpCommitLintCommand extends Command
         $dirs = [];
         do {
             $dirs[] = $targetDirectory;
-            $targetFile = $targetDirectory . DIRECTORY_SEPARATOR . $file;
+            $targetFile = $targetDirectory.DIRECTORY_SEPARATOR.$file;
             if ($this->filesystem->exists($targetFile)) {
                 return $returnIncludeFilename ? $targetFile : $targetDirectory;
             }
@@ -109,9 +104,7 @@ abstract class PhpCommitLintCommand extends Command
     }
 
     /**
-     * @param SymfonyStyle $io
      * @param array<string> $includes
-     * @return void
      */
     protected function prepareValidatorConfiguration(SymfonyStyle $io, array &$includes): void
     {
@@ -122,7 +115,7 @@ abstract class PhpCommitLintCommand extends Command
         }
         foreach ($includes as $include) {
             if (!is_string($include)) {
-                throw new RuntimeException(sprintf(
+                throw new \RuntimeException(sprintf(
                     'Expected list of includes to contain strings, received %s',
                     gettype($include)
                 ));
@@ -139,5 +132,4 @@ abstract class PhpCommitLintCommand extends Command
             $io->writeln('');
         }
     }
-
 }

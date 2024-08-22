@@ -8,6 +8,5 @@ abstract class PropertyRule extends Rule
 {
     public function __construct(
         protected string $property,
-    ) {
-    }
+    ) {}
 }

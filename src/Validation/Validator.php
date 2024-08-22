@@ -13,19 +13,18 @@ class Validator
      */
     public function __construct(
         protected array $rules = []
-    ) {
-    }
+    ) {}
 
     /**
-     * @param Message $message
      * @return array<string>
      */
     public function validate(Message $message): array
     {
         $errors = [];
-        foreach($this->rules as $rule) {
+        foreach ($this->rules as $rule) {
             array_push($errors, ...$rule->validate($message));
         }
+
         return $errors;
     }
 }

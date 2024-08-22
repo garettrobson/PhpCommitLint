@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Tests\Message;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
-use GarettRobson\PhpCommitLint\Message\Message;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
+use GarettRobson\PhpCommitLint\Message\Message;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 #[CoversClass(ConventionalCommitsMessageParser::class)]
 #[CoversClass(Message::class)]
 final class ConventionalCommitsMessageParserTest extends TestCase
@@ -43,7 +46,7 @@ final class ConventionalCommitsMessageParserTest extends TestCase
 
     public function testParseCompleteMessage(): void
     {
-        $testMessage = <<<TEST_MESSAGE
+        $testMessage = <<<'TEST_MESSAGE'
 feat(user-auth)!: add multi-factor authentication
 
 This commit introduces multi-factor authentication for user accounts.

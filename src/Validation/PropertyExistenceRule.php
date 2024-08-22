@@ -12,12 +12,11 @@ class PropertyExistenceRule extends PropertyRule
         protected string $property,
         protected bool $exists = true,
         protected string $errorMessage = 'Required property %s missing',
-    ) {
-    }
+    ) {}
 
     public function performValidation(Message $message): self
     {
-        if($this->exists ^ $message->has($this->property)) {
+        if ($this->exists ^ $message->has($this->property)) {
             $this->addError(
                 $this->errorMessage,
                 $this->property

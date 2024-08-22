@@ -12,6 +12,6 @@ class ConventionalCommitsMessageParser extends PatternFileMessageParser
 {
     public function __construct()
     {
-        parent::__construct(__DIR__ . '/../../res/conventional-commits.regex.pattern');
+        parent::__construct(__DIR__.'/../../res/conventional-commits.regex.pattern');
     }
 }

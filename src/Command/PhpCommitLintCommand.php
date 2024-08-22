@@ -58,7 +58,7 @@ abstract class PhpCommitLintCommand extends Command
      *
      * @param array<string> $includes
      */
-    protected function includeLocalOverridePath(SymfonyStyle $io, array &$includes)
+    protected function includeLocalOverridePath(SymfonyStyle $io, array &$includes): void
     {
         if ($overridePath = $this->findLocalFile('.php-commit-lint.json')) {
             $includes[] = $overridePath;

@@ -18,16 +18,24 @@ use Psr\Container\ContainerInterface;
 class Message implements ContainerInterface, \JsonSerializable
 {
     /**
-     * @param array<string, string> $matches
+     * @var array<string, string>
+     */
+    protected array $matches;
+
+    /**
+     * @param array<string,mixed> $matches
      */
     public function __construct(
-        protected array $matches
+        array $matches
     ) {
-        $this->matches = array_filter(
+        /** @var array<string, string> $matches */
+        $matches = array_filter(
             $matches,
             fn ($match) => is_string($match),
             ARRAY_FILTER_USE_KEY
         );
+
+        $this->matches = $matches;
     }
 
     /**

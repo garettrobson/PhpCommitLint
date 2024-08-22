@@ -128,8 +128,9 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         );
         $question->setMultiselect(true);
 
-        /** @var array<string> $answer */
-        return (array) $io->askQuestion($question);
+        $answer = $io->askQuestion($question);
+
+        return is_array($answer) ? $answer : null;
     }
 
     public function askConfirm(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string $targetFile): bool

@@ -166,10 +166,9 @@ class ConfigSetupCommand extends PhpCommitLintCommand
                 };
 
                 $question = new Question(sprintf(
-                    "Specify where the .php-commit-lint.json file should be created\nCan be relative to <comment>%s</comment>",
+                    'What directory should the new .php-commit-lint.json override file should be created, can be relative to <comment>%s</comment>',
                     getcwd(),
                 ));
-
                 $question->setAutocompleterCallback($callback);
 
                 $answer = $io->askQuestion($question);
@@ -228,7 +227,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
 
         $question = new ConfirmationQuestion(
             sprintf(
-                'Write the JSON above to <comment>%s</comment>?',
+                'Write the override JSON file to <comment>%s</comment>?',
                 $targetFile,
             ),
             true

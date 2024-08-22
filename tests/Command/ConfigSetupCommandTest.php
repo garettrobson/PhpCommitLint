@@ -41,7 +41,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 #[CoversClass(ConfigSetupCommand::class)]
 class ConfigSetupCommandTest extends TestCase
 {
-    public function testExecuteWithValidMessage(): void
+    public function testNonInteractiveExecute(): void
     {
         $application = new PhpCommitLintApplication();
 
@@ -51,14 +51,51 @@ class ConfigSetupCommandTest extends TestCase
             'target-directory' => __DIR__.'/res/tmp',
             '--rule-set' => ['formatting50-72'],
             '--yes' => true,
+            '--no-override' => true,
         ]);
 
         $commandTester->assertCommandIsSuccessful();
-        $output = $commandTester->getDisplay();
 
         $expected = file_get_contents(__DIR__.'/res/test/.php-commit-lint-reference.json');
         $actual = file_get_contents(__DIR__.'/res/tmp/.php-commit-lint.json');
+        unlink(__DIR__.'/res/tmp/.php-commit-lint.json');
 
         $this->assertSame($expected, $actual);
+    }
+
+    public function testInteractiveExecute(): void
+    {
+        $application = new PhpCommitLintApplication();
+
+        $command = $application->find('config:setup');
+
+        $commandTester = new CommandTester($command);
+
+        $commandTester->setInputs(['.', __DIR__.'/res/tmp', 'formatting50-72', 'yes']);
+        $commandTester->execute([], ['interactive' => true]);
+
+        $commandTester->assertCommandIsSuccessful();
+
+        $expected = file_get_contents(__DIR__.'/res/test/.php-commit-lint-reference.json');
+        $actual = file_get_contents(__DIR__.'/res/tmp/.php-commit-lint.json');
+        unlink(__DIR__.'/res/tmp/.php-commit-lint.json');
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testInteractiveQuit(): void
+    {
+        $application = new PhpCommitLintApplication();
+
+        $command = $application->find('config:setup');
+
+        $commandTester = new CommandTester($command);
+
+        $commandTester->setInputs(['q']);
+        $commandTester->execute([], ['interactive' => true]);
+
+        $output = $commandTester->getDisplay();
+
+        $this->assertStringContainsString('[ERROR] Setup stopped', $output);
     }
 }

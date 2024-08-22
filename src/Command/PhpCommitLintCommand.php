@@ -34,6 +34,12 @@ abstract class PhpCommitLintCommand extends Command
                 'Include additional configuration files',
                 []
             )
+            ->addOption(
+                'no-override',
+                'O',
+                InputOption::VALUE_NONE,
+                'Do not load any local overrides'
+            )
         ;
     }
 
@@ -47,7 +53,10 @@ abstract class PhpCommitLintCommand extends Command
             ...(array) $includePaths,
         ];
 
-        $this->includeLocalOverridePath($io, $includes);
+        if (!$input->getOption('no-override')) {
+            $this->includeLocalOverridePath($io, $includes);
+        }
+
         $this->prepareValidatorConfiguration($io, $includes);
 
         return self::SUCCESS;

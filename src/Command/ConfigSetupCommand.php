@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Command;
 
-use RuntimeException;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\AnsiColorMode;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class ConfigSetupCommand extends PhpCommitLintCommand
@@ -27,7 +30,25 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         parent::configure();
         $this
             ->setDescription('Setup wizard')
-            ->setHelp('Setup a new .php-commit-lint file in your project')
+            ->setHelp('Guided setup for a new .php-commit-lint overrides file')
+            ->addArgument(
+                'target-directory',
+                InputArgument::OPTIONAL,
+                'Specify the directory in which to setup the new overrides file'
+            )
+            ->addOption(
+                'rule-set',
+                'r',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Specify the directory in which to setup the new overrides file',
+                []
+            )
+            ->addOption(
+                'yes',
+                'y',
+                InputOption::VALUE_NONE,
+                'Accept the final confirmation automatically'
+            )
         ;
     }
 
@@ -39,107 +60,157 @@ class ConfigSetupCommand extends PhpCommitLintCommand
 
         $io->title('PHP Commit Lint: Setup');
 
-        $targetDir = false;
+        $targetDirectory = $this->askTargetDirectory($input, $output, $io);
 
-        $autoDetectDirectories = array_filter([
-            'Found a .php-commit-lint.json file in %s, should we override it?' => $this->findLocalFile('.php-commit-lint.json', false),
-            'Found a .git repo in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('.git', false),
-            'Found a composer.json file in %s, should we create a .php-commit-lint.json file here?' => $this->findLocalFile('composer.json', false),
-            'Current directory is %s, should we create a .php-commit-lint.json file here?' => getcwd(),
-            'Your home directory is %s, should we create a .php-commit-lint.json file here?' => Path::getHomeDirectory(),
-        ]);
-
-        foreach($autoDetectDirectories as $questionText => $directory) {
-            $directory = $directory;
-
-            if($targetDir = $io->askQuestion(new ConfirmationQuestion(
-                sprintf($questionText, $directory)
-            )) ? $directory : false) {
-                break;
-            }
+        // askTargetDirectory returns null to signal termination
+        if($targetDirectory === null) {
+            $this->stop($io);
         }
 
-        if (!$targetDir) {
-            $targetDir = $io->askQuestion(new Question(
-                'Specify where the .php-commit-lint.json file should be created',
-            ));
+        $io->writeln(sprintf(
+            '<comment>Target directory</comment> <info>%s</info>',
+            $targetDirectory,
+        ));
+
+        $ruleSets = $this->askRuleSets($input, $output, $io);
+
+        // askRuleSets returns null to signal termination
+        if ($ruleSets === null) {
+            $this->stop($io);
         }
-
-        $ruleSetNames = array_keys(get_object_vars($this->validationConfiguration->getRuleSets()));
-        $selectedRuleSets = [];
-        do {
-            $io->writeln(sprintf(
-                '<info>Current rule sets:</info> %s',
-                $selectedRuleSets ?
-                    implode(', ', array_map(
-                        fn ($ruleName) => sprintf('<text>%s</text>', $ruleName),
-                        $selectedRuleSets
-                    )) :
-                    '<comment>-none-</comment>',
-            ));
-            $io->writeln(sprintf(
-                '<info>Available rule sets:</info> %s',
-                $ruleSetNames ?
-                    implode(', ', array_map(
-                        fn ($ruleName) => sprintf('<text>%s</text>', $ruleName),
-                        $ruleSetNames
-                    )) :
-                    '<comment>-none-</comment>',
-            ));
-
-            $question = new Question('Please choose a rule set to add, to stop adding rule sets leave empty');
-            $question->setAutocompleterValues($ruleSetNames);
-            $ruleSetName = $io->askQuestion($question);
-
-            if(!$ruleSetName) {
-                break;
-            } elseif (in_array($ruleSetName, $ruleSetNames, true)) {
-                $selectedRuleSets[] = $ruleSetName;
-                $index = array_search($ruleSetName, $ruleSetNames);
-                unset($ruleSetNames[$index]);
-            } elseif(is_string($ruleSetName)) {
-                $io->warning(sprintf(
-                    'There is no rule set with the name "%s"',
-                    $ruleSetName,
-                ));
-            } else {
-                throw new RuntimeException(sprintf(
-                    'Unexpected rule set name %s',
-                    json_encode($ruleSetName),
-                ));
-            }
-
-        } while(true);
 
         $data = [
-            'using' => $selectedRuleSets,
+            'using' => $ruleSets,
         ];
 
         $json = json_encode($data, JSON_PRETTY_PRINT) . PHP_EOL;
 
-        $io->section('Review');
-        $io->writeln(sprintf('<text>%s</text>', $json));
+        $io->writeln('<comment>Preview JSON</comment>');
+        $io->writeln(sprintf(
+            '<info>%s</info>',
+            $json,
+        ));
 
-        $targetFile = $targetDir . DIRECTORY_SEPARATOR . '.php-commit-lint.json';
-        $confirm = $io->askQuestion(new ConfirmationQuestion(
+        $targetFile = $targetDirectory . DIRECTORY_SEPARATOR . '.php-commit-lint.json';
+        $confirm = $this->askConfirm($input, $output, $io, $targetFile);
+
+        if(!$confirm) {
+            return $this->stop($io);
+        }
+
+        $this->filesystem->dumpFile($targetFile, $json);
+        $io->success(sprintf(
+            'New local override file %s created successfully',
+            $targetFile,
+        ));
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param SymfonyStyle $io
+     * @return string|null
+     */
+    public function askTargetDirectory(InputInterface $input, OutputInterface $output, SymfonyStyle $io): ?string
+    {
+
+        if($targetDirectory = $input->getArgument('target-directory')) {
+            return is_string($targetDirectory) ? $targetDirectory : null;
+        }
+
+        $helper = $this->getHelper('question');
+
+        $directoryChoices = array_filter([
+            'override' => $this->findLocalFile('.php-commit-lint.json', false),
+            'repository' => $this->findLocalFile('.git', false),
+            'project' => $this->findLocalFile('composer.json', false),
+            'current' => getcwd(),
+            'home' => Path::getHomeDirectory(),
+            '.' => 'Enter a path manually',
+            'q' => 'Quit',
+        ]);
+
+        $question = new ChoiceQuestion(
+            'Where would you like the new override file to be created?',
+            $directoryChoices,
+            '0'
+        );
+
+        /** @var QuestionHelper $helper */
+        $answer = $helper->ask($input, $output, $question);
+
+        switch ($answer) {
+            case 'q':
+                return null;
+            case '.':
+                $answer = $io->askQuestion(new Question(
+                    'Specify where the .php-commit-lint.json file should be created',
+                ));
+                return is_string($answer) ? $answer : '';
+            default:
+                return $directoryChoices[$answer];
+        }
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param SymfonyStyle $io
+     * @return ?array<string>
+     */
+    public function askRuleSets(InputInterface $input, OutputInterface $output, SymfonyStyle $io): ?array
+    {
+        if($ruleSets = $input->getOption('rule-set') ?? []) {
+            return is_array($ruleSets) ? $ruleSets : null;
+        }
+
+        $helper = $this->getHelper('question');
+
+        $ruleSetChoices = array_keys(get_object_vars($this->validationConfiguration->getRuleSets()));
+        array_unshift($ruleSetChoices, '');
+        unset($ruleSetChoices[0]);
+
+        $question = new ChoiceQuestion(
+            'Which rule sets would you like to use? (Enter numbers separated by commas',
+            $ruleSetChoices,
+        );
+        $question->setMultiselect(true);
+
+        /** @var QuestionHelper $helper */
+        /** @var array<string> $answer */
+        $answer = (array)$helper->ask($input, $output, $question);
+        return $answer;
+    }
+
+    public function askConfirm(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string $targetFile): bool
+    {
+
+        if($input->getOption('yes')) {
+            return true;
+        }
+
+        $question = new ConfirmationQuestion(
             sprintf(
                 'Write the JSON above to <comment>%s</comment>?',
                 $targetFile,
-            )
-        ));
+            ),
+            true
+        );
+        $question->setAutocompleterValues(['yes', 'no']);
 
-        if($confirm) {
-            $this->filesystem->dumpFile($targetFile, $json);
-            $io->success(sprintf(
-                'New local override file %s created successfully',
-                $targetFile,
-            ));
-        } else {
-            $io->error('Setup stopped');
-            return self::FAILURE;
-        }
+        $answer = $io->askQuestion($question);
 
-        return self::SUCCESS;
+        return !!$answer;
+    }
+
+    public function stop(SymfonyStyle $io): int
+    {
+        $io->error('Setup stopped');
+        return self::FAILURE;
     }
 
 }

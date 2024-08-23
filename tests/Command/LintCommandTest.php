@@ -42,6 +42,22 @@ use Symfony\Component\Console\Tester\CommandTester;
 #[CoversClass(ConfigSetupCommand::class)]
 class LintCommandTest extends TestCase
 {
+    public function testExecuteNoArgumentFile(): void
+    {
+        $application = new PhpCommitLintApplication();
+
+        $command = $application->find('lint');
+        $commandTester = new CommandTester($command);
+
+        $this->expectException(\RuntimeException::class);
+        $commandTester->execute(
+            [],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            ]
+        );
+    }
+
     public function testExecuteWithValidMessage(): void
     {
         $application = new PhpCommitLintApplication();
@@ -90,21 +106,5 @@ class LintCommandTest extends TestCase
         $commandTester->execute([
             'file' => __DIR__.'/file-does-not-exist.txt',
         ]);
-    }
-
-    public function testExecuteNoArgumentFile(): void
-    {
-        $application = new PhpCommitLintApplication();
-
-        $command = $application->find('lint');
-        $commandTester = new CommandTester($command);
-
-        $this->expectException(\RuntimeException::class);
-        $commandTester->execute(
-            [],
-            [
-                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
-            ]
-        );
     }
 }

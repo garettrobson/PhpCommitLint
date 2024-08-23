@@ -1,5 +1,5 @@
 {
-    "version": "0.0.15",
+    "version": "0.0.16",
     "name": "garettrobson/php-commit-lint",
     "description": "Lint commit messages",
     "type": "project",

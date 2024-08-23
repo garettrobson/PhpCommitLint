@@ -78,12 +78,12 @@
                 ]
             },
 
-            "colon-separator-regex": {
-                "type": "property-regex",
+            "colon-separator-required": {
+                "type": "property-existence",
                 "parameters": [
                     "colon_separator",
-                    "/^\\s?$/",
-                    "There must not be more than 1 space before colon (:) marker"
+                    false,
+                    "Must not have any space before colon (:) marker"
                 ]
             },
             "colon-required": {

@@ -156,6 +156,7 @@ HELP)
                 ));
             }
             $output->writeln('');
+
             $io->error('Commit message failed linting');
 
             return static::FAILURE;

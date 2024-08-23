@@ -26,7 +26,7 @@ class PropertyRegexRule extends PropertyRule
                 $this->errorMessage,
                 $this->property,
                 $message->get($this->property),
-                $this->pattern
+                $this->pattern,
             );
         }
 

@@ -49,13 +49,18 @@ class LintCommandTest extends TestCase
         $command = $application->find('lint');
         $commandTester = new CommandTester($command);
 
-        $this->expectException(\RuntimeException::class);
         $commandTester->execute(
             [],
             [
                 'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
             ]
         );
+        $commandTester->assertCommandIsSuccessful();
+        $output = $commandTester->getDisplay();
+
+        $this->assertStringStartsNotWith('PHP Commit Lint: Message Lint', $output);
+        $this->assertStringContainsString('lint [options] [--] [<file>]', $output);
+        $this->assertStringContainsString('File to lint the contents of, displays help if omitted', $output);
     }
 
     public function testExecuteWithValidMessage(): void

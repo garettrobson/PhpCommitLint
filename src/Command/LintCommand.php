@@ -7,6 +7,7 @@ namespace GarettRobson\PhpCommitLint\Command;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 use GarettRobson\PhpCommitLint\Validation\Rule;
 use GarettRobson\PhpCommitLint\Validation\Validator;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -68,7 +69,7 @@ When installed as a composer dependency you can simply symlink the executable to
 HELP)
             ->addArgument(
                 'file',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'File to lint the contents of, displays help if omitted'
             )
         ;
@@ -82,21 +83,43 @@ HELP)
 
         parent::execute($input, $output);
 
-        $file = $input->getArgument('file');
+        $commitMessage = false;
 
-        if (!is_string($file)) {
+        $file = $input->getArgument('file');
+        if (null == $file) {
+            if (posix_isatty(STDIN)) {
+                if ($application = $this->getApplication()) {
+                    return $application->doRun(
+                        new ArrayInput([
+                            'lint',
+                            '--help' => true,
+                        ]),
+                        $output
+                    );
+                }
+
+                throw new \RuntimeException('Failed to retrieve application context');
+            }
+
+            $commitMessage = stream_get_contents(STDIN, -1);
+        } elseif (!is_string($file)) {
             throw new \RuntimeException(sprintf(
                 'Expected file argument to be a string, received %s',
                 gettype($file),
             ));
+        } else {
+            $commitMessage = $this->filesystem->readFile($file);
+            if (!$commitMessage) {
+                throw new \Exception(sprintf(
+                    'No message to parse in %s',
+                    $file
+                ));
+            }
         }
-
-        $commitMessage = $this->filesystem->readFile($file);
 
         if (!$commitMessage) {
             throw new \Exception(sprintf(
-                'No message to parse in %s',
-                $file
+                'No message to parse',
             ));
         }
 

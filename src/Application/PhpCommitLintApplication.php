@@ -16,8 +16,27 @@ class PhpCommitLintApplication extends Application
 {
     public function __construct()
     {
-        $composerJsonDefinition = json_decode(file_get_contents(__DIR__.'/../../composer.json'));
-        parent::__construct($composerJsonDefinition->name, $composerJsonDefinition->version);
+        $composerJsonPath = __DIR__.'/../../composer.json';
+        $json = file_get_contents($composerJsonPath);
+
+        if (false === $json) {
+            throw new \RuntimeException(sprintf(
+                'Unable to read expected composer.json file %s',
+                $composerJsonPath
+            ));
+        }
+
+        /** @var \stdClass $composerJsonDefinition */
+        $composerJsonDefinition = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+
+        $name = is_string($composerJsonDefinition->name ?? null) ?
+            $composerJsonDefinition->name :
+            'php-commit-lint';
+        $version = is_string($composerJsonDefinition->version ?? null) ?
+            $composerJsonDefinition->version :
+            'error';
+
+        parent::__construct($name, $version);
         $this->addCommands([
             new LintCommand(),
             new ConfigCommand(),

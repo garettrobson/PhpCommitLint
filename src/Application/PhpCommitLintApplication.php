@@ -16,7 +16,8 @@ class PhpCommitLintApplication extends Application
 {
     public function __construct()
     {
-        parent::__construct('git-commit-lint', 'alpha');
+        $composerJsonDefinition = json_decode(file_get_contents(__DIR__.'/../../composer.json'));
+        parent::__construct($composerJsonDefinition->name, $composerJsonDefinition->version);
         $this->addCommands([
             new LintCommand(),
             new ConfigCommand(),

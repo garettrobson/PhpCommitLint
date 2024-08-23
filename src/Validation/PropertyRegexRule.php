@@ -11,7 +11,8 @@ class PropertyRegexRule extends PropertyRule
     public function __construct(
         protected string $property,
         protected string $pattern,
-        protected string $errorMessage = 'Unexpected %s of value %s, does not conform to pattern: %s'
+        protected bool $positiveCheck = true,
+        protected string $errorMessage = 'Unexpected %s of value %s, does not conform to pattern: %s',
     ) {
         parent::__construct($property);
     }
@@ -20,7 +21,7 @@ class PropertyRegexRule extends PropertyRule
     {
         if (
             $message->has($this->property)
-            && !preg_match($this->pattern, $message->get($this->property))
+            && (preg_match($this->pattern, $message->get($this->property)) ^ $this->positiveCheck)
         ) {
             $this->addError(
                 $this->errorMessage,

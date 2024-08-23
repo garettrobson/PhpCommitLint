@@ -6,6 +6,7 @@
                 "parameters": [
                     "summary",
                     "/^\\s*/",
+                    true,
                     "Summary can not have leading spaces"
                 ]
             },
@@ -40,6 +41,7 @@
                 "parameters": [
                     "type_separator",
                     "/^\\s?$/",
+                    true,
                     "There must not be more than 1 space between type and scope"
                 ]
             },
@@ -49,6 +51,7 @@
                 "parameters": [
                     "scope_outer",
                     "/^(\\(.*\\)|\\[.*\\]|{.*}|<.*>)?$/",
+                    true,
                     "Scope must using matching brackets"
                 ]
             },
@@ -57,6 +60,7 @@
                 "parameters": [
                     "scope_start_separator",
                     "/^$/",
+                    true,
                     "Scope must not start with space"
                 ]
             },
@@ -65,6 +69,7 @@
                 "parameters": [
                     "scope_end_separator",
                     "/^$/",
+                    true,
                     "Scope must not end with spaces"
                 ]
             },
@@ -74,6 +79,7 @@
                 "parameters": [
                     "breaking_separator",
                     "/^\\s?$/",
+                    true,
                     "There must not be more than 1 space before breaking change (!) marker"
                 ]
             },
@@ -98,6 +104,7 @@
                 "parameters": [
                     "description_separator",
                     "/^\\s?$/",
+                    true,
                     "There must not be more than 1 space before description"
                 ]
             },
@@ -113,7 +120,27 @@
                 "parameters": [
                     "description",
                     "/^\\w+/",
+                    true,
                     "Description must start with a valid word character"
+                ]
+            },
+
+            "body-start-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "body",
+                    "/^\\n[^\\n]+/",
+                    true,
+                    "Body must start with a single new line."
+                ]
+            },
+            "body-paragraph-regex": {
+                "type": "property-regex",
+                "parameters": [
+                    "body",
+                    "/[^\\^]\\n\\n\\n/",
+                    false,
+                    "Paragraphs must be separated by a single line."
                 ]
             }
         }

@@ -85,4 +85,10 @@ class Message implements ContainerInterface, \JsonSerializable
     {
         return $this->matches;
     }
+
+    /** @return array<null|string> */
+    public function getMatches(): array
+    {
+        return $this->matches;
+    }
 }

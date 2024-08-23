@@ -133,7 +133,14 @@ HELP)
 
         if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
             $io->section('Message');
-            $io->writeln(json_encode($message, JSON_PRETTY_PRINT) ?: '');
+            foreach ($message->getMatches() as $key => $value) {
+                $io->writeln(sprintf(
+                    '%s: <%3$s>%2$s</%3$s>',
+                    $key,
+                    $value ?? 'NULL',
+                    is_null($value) ? 'text' : 'comment'
+                ));
+            }
         }
 
         $validator = new Validator($this->getRules());

@@ -36,10 +36,6 @@ abstract class Rule
         protected \stdClass $definition
     ) {
         $requiredProperties = $this->getRequiredProperties();
-        $requiredPropertiesMissing = array_combine(
-            array_keys($requiredProperties),
-            array_pad([], count($requiredProperties), true),
-        );
 
         $optionalProperties = $this->getOptionalProperties();
 
@@ -47,7 +43,7 @@ abstract class Rule
             if (isset($requiredProperties[$property])) {
                 if ($this->getType($value) !== $requiredProperties[$property]) {
                     throw new \RuntimeException(sprintf(
-                        'Rule definition expected required property %s of type %s, received %s:\n%s',
+                        "Rule definition expected required property %s of type %s, received %s:\n%s",
                         $property,
                         $requiredProperties[$property],
                         $this->getType($value),
@@ -57,7 +53,7 @@ abstract class Rule
             } elseif (isset($optionalProperties[$property])) {
                 if ($this->getType($value) !== $optionalProperties[$property]) {
                     throw new \RuntimeException(sprintf(
-                        'Rule definition expected optional property %s of type %s, received %s:\n%s',
+                        "Rule definition expected optional property %s of type %s, received %s:\n%s",
                         $property,
                         $optionalProperties[$property],
                         $this->getType($value),
@@ -66,7 +62,7 @@ abstract class Rule
                 }
             } else {
                 throw new \RuntimeException(sprintf(
-                    "Unexpected rule property %s found on rule:\n%s",
+                    "Rule definition found unexpected property %s found on rule:\n%s",
                     $property,
                     json_encode($definition, JSON_PRETTY_PRINT),
                 ));
@@ -77,20 +73,27 @@ abstract class Rule
                     $this->{$property} = $value;
                 } elseif (isset($requiredProperties[$property])) {
                     throw new \RuntimeException(sprintf(
-                        'Required property %s does not exist on class %s',
+                        "Rule definition required property %s does not exist on class %s:\n%s",
                         $property,
                         __CLASS__,
+                        json_encode($definition, JSON_PRETTY_PRINT),
                     ));
                 } elseif (isset($requiredProperties[$property])) {
                     throw new \RuntimeException(sprintf(
-                        'Optional property %s does not exist on class %s',
+                        "Rule definition optional property %s does not exist on class %s:\n%s",
                         $property,
                         __CLASS__,
+                        json_encode($definition, JSON_PRETTY_PRINT),
+                    ));
+                } else {
+                    throw new \RuntimeException(sprintf(
+                        "Rule definition property %s is unexpected on class %s:\n%s",
+                        $property,
+                        __CLASS__,
+                        json_encode($definition, JSON_PRETTY_PRINT),
                     ));
                 }
             }
-
-            $requiredPropertiesMissing[$property] = false;
         }
     }
 

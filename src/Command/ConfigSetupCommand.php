@@ -26,7 +26,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
     /**
      * Undocumented function.
      */
-    public function askTargetDirectory(InputInterface $input, OutputInterface $output, SymfonyStyle $io): ?string
+    protected function askTargetDirectory(InputInterface $input, OutputInterface $output, SymfonyStyle $io): ?string
     {
         if ($targetDirectory = $input->getArgument('target-directory')) {
             return is_string($targetDirectory) ? $targetDirectory : null;
@@ -112,7 +112,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
     /**
      * @return ?array<string>
      */
-    public function askRuleSets(InputInterface $input, OutputInterface $output, SymfonyStyle $io): ?array
+    protected function askRuleSets(InputInterface $input, OutputInterface $output, SymfonyStyle $io): ?array
     {
         if ($ruleSets = $input->getOption('rule-set') ?? []) {
             return is_array($ruleSets) ? $ruleSets : null;
@@ -133,7 +133,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         return is_array($answer) ? $answer : null;
     }
 
-    public function askConfirm(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string $targetFile): bool
+    protected function askConfirm(InputInterface $input, OutputInterface $output, SymfonyStyle $io, string $targetFile): bool
     {
         if ($input->getOption('yes')) {
             return true;
@@ -153,7 +153,7 @@ class ConfigSetupCommand extends PhpCommitLintCommand
         return (bool) $answer;
     }
 
-    public function stop(SymfonyStyle $io): int
+    protected function stop(SymfonyStyle $io): int
     {
         $io->error('Setup stopped');
 

@@ -20,6 +20,7 @@ use GarettRobson\PhpCommitLint\Validation\Validator;
 use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -47,9 +48,14 @@ class LintCommandTest extends TestCase
 
         $command = $application->find('lint');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'file' => __DIR__.'/res/test/conventional-commits-valid.txt',
-        ]);
+        $commandTester->execute(
+            [
+                'file' => __DIR__.'/res/test/conventional-commits-valid.txt',
+            ],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            ]
+        );
 
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();

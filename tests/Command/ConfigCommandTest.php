@@ -20,6 +20,7 @@ use GarettRobson\PhpCommitLint\Validation\Validator;
 use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -47,11 +48,16 @@ class ConfigCommandTest extends TestCase
 
         $command = $application->find('config');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            '--types' => true,
-            '--rule-sets' => true,
-            '--using' => true,
-        ]);
+        $commandTester->execute(
+            [
+                '--types' => true,
+                '--rule-sets' => true,
+                '--using' => true,
+            ],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            ]
+        );
 
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();

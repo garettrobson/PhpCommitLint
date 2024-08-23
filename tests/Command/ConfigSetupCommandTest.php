@@ -20,6 +20,7 @@ use GarettRobson\PhpCommitLint\Validation\Validator;
 use GarettRobson\PhpCommitLint\Validation\ValidatorConfiguration;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -47,12 +48,17 @@ class ConfigSetupCommandTest extends TestCase
 
         $command = $application->find('config:setup');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            'target-directory' => __DIR__.'/res/tmp',
-            '--rule-set' => ['formatting50-72'],
-            '--yes' => true,
-            '--no-override' => true,
-        ]);
+        $commandTester->execute(
+            [
+                'target-directory' => __DIR__.'/res/tmp',
+                '--rule-set' => ['formatting50-72'],
+                '--yes' => true,
+                '--no-override' => true,
+            ],
+            [
+                'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            ]
+        );
 
         $commandTester->assertCommandIsSuccessful();
 
@@ -72,7 +78,10 @@ class ConfigSetupCommandTest extends TestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->setInputs(['.', __DIR__.'/res/tmp', 'formatting50-72', 'yes']);
-        $commandTester->execute([], ['interactive' => true]);
+        $commandTester->execute([], [
+            'interactive' => true,
+            'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+        ]);
 
         $commandTester->assertCommandIsSuccessful();
 

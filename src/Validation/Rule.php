@@ -103,13 +103,13 @@ abstract class Rule
     final public function validate(Message $message): array
     {
         return $this
-            ->resetErrors()
+            ->resetMessages()
             ->performValidation($message)
-            ->getErrors()
+            ->getMessages()
         ;
     }
 
-    public function resetErrors(): self
+    public function resetMessages(): self
     {
         $this->errors = [];
 
@@ -119,7 +119,7 @@ abstract class Rule
     /**
      * @param null|bool|float|int|string ...$arguments
      */
-    public function addError(string $errorMessage, ...$arguments): self
+    public function addMessage(string $errorMessage, ...$arguments): self
     {
         $arguments = array_map(
             fn ($val) => sprintf('<comment>%s</comment>', $val),
@@ -137,7 +137,7 @@ abstract class Rule
     /**
      * @return array<string>
      */
-    public function getErrors(): array
+    public function getMessages(): array
     {
         return $this->errors;
     }

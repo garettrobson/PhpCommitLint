@@ -21,7 +21,7 @@ class PropertyExistenceRule extends PropertyRule
     public function performValidation(Message $message): self
     {
         if ($this->positiveCheck ^ $message->has($this->property)) {
-            $this->addError(
+            $this->addMessage(
                 $this->errorMessage,
                 $this->property
             );

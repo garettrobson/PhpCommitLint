@@ -145,14 +145,14 @@ HELP)
 
         $validator = new Validator($this->getRules());
 
-        $errors = $validator->validate($message);
+        $messages = $validator->validate($message);
 
-        if ($errors) {
-            $io->section('Errors');
-            foreach ($errors as $error) {
+        if ($messages) {
+            $io->section('Messages');
+            foreach ($messages as $message) {
                 $output->writeln(sprintf(
                     '- %s',
-                    $error
+                    $message
                 ));
             }
             $output->writeln('');

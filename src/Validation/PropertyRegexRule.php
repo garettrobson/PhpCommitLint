@@ -25,7 +25,7 @@ class PropertyRegexRule extends PropertyRule
             $message->has($this->property)
             && (preg_match($this->pattern, $message->get($this->property)) ^ $this->positiveCheck)
         ) {
-            $this->addError(
+            $this->addMessage(
                 $this->errorMessage,
                 $this->property,
                 $message->get($this->property),

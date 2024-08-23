@@ -47,7 +47,11 @@ class ConfigCommandTest extends TestCase
 
         $command = $application->find('config');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
+        $commandTester->execute([
+            '--types' => true,
+            '--rule-sets' => true,
+            '--using' => true,
+        ]);
 
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();

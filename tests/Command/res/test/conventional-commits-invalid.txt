@@ -1,3 +1,7 @@
 foo bar  ( user -auth )  !  :  this title is too long and should fail validation
 
-This line is the third in the file, and is so long that it needs to be wrapped
+
+This line is the first line of the body it is too long and should not have two section breaks before it.
+
+
+This is the second paragraph, it is also too long and has too many many section breaks.

@@ -3,18 +3,15 @@
         "conventional-commits-strict": {
             "description-separator-required": {
                 "type": "property-existence",
-                "parameters": [
-                    "description_separator"
-                ]
+                "property": "description_separator"
             },
+
             "description-upper": {
                 "type": "property-regex",
-                "parameters": [
-                    "type",
-                    "/^[A-Z0-9].*$/",
-                    true,
-                    "Description must start with a capitol letter or number"
-                ]
+                "property": "type",
+                "pattern": "/^[A-Z0-9].*$/",
+                "positiveCheck": true,
+                "errorMessage": "Description must start with a capitol letter or number"
             }
         }
     }

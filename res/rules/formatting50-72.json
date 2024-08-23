@@ -3,10 +3,8 @@
         "formatting50-72": {
             "line-length": {
                 "type": "line-length",
-                "parameters": [
-                    [50, 0],
-                    72
-                ]
+                "lineLengths": [50, 0],
+                "defaultLineLength": 72
             }
         }
     }

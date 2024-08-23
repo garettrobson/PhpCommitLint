@@ -7,6 +7,8 @@ namespace GarettRobson\PhpCommitLint\Validation;
 abstract class PropertyRule extends Rule
 {
     public function __construct(
-        protected string $property,
-    ) {}
+        protected \stdClass $definition
+    ) {
+        parent::__construct($definition);
+    }
 }

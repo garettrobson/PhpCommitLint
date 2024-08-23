@@ -8,13 +8,15 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class LineLengthRule extends Rule
 {
-    /**
-     * @param array<int> $lineLengths
-     */
+    /** @var array<int> */
+    protected array $lineLengths = [50, 0];
+    protected int $defaultLineLength = 72;
+
     public function __construct(
-        protected array $lineLengths = [50, 0],
-        protected int $defaultLineLength = 72,
-    ) {}
+        protected \stdClass $definition
+    ) {
+        parent::__construct($definition);
+    }
 
     public function performValidation(Message $message): self
     {
@@ -32,5 +34,16 @@ class LineLengthRule extends Rule
         }
 
         return $this;
+    }
+
+    protected function getRequiredProperties(): array
+    {
+        return array_merge(
+            parent::getRequiredProperties(),
+            [
+                'lineLengths' => 'array',
+                'defaultLineLength' => 'integer',
+            ]
+        );
     }
 }

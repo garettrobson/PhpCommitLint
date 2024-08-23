@@ -51,7 +51,7 @@ class LintCommand extends PhpCommitLintCommand
                 ));
             }
 
-            $rule = new $class(...$parameters);
+            $rule = new $class($rule);
             $rules[] = $rule;
         }
 

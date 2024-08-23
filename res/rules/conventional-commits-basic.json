@@ -3,145 +3,115 @@
         "conventional-commits-basic": {
             "summary-no-leading-spaces": {
                 "type": "property-regex",
-                "parameters": [
-                    "summary",
-                    "/^\\s*/",
-                    true,
-                    "Summary can not have leading spaces"
-                ]
+                "property": "summary",
+                "pattern": "/^\\s*/",
+                "positiveCheck": true,
+                "errorMessage": "Summary can not have leading spaces"
             },
 
             "type-required": {
                 "type": "property-existence",
-                "parameters": [
-                    "type"
-                ]
+                "property": "type"
             },
             "type-set": {
                 "type": "property-set",
-                "parameters": [
-                    "type",
-                    [
-                        "fix",
-                        "feat",
-                        "build",
-                        "chore",
-                        "ci",
-                        "docs",
-                        "style",
-                        "refactor",
-                        "perf",
-                        "test"
-                    ]
+                "property": "type",
+                "set": [
+                    "fix",
+                    "feat",
+                    "build",
+                    "chore",
+                    "ci",
+                    "docs",
+                    "style",
+                    "refactor",
+                    "perf",
+                    "test"
                 ]
             },
 
             "type-separator-regex": {
                 "type": "property-regex",
-                "parameters": [
-                    "type_separator",
-                    "/^\\s?$/",
-                    true,
-                    "There must not be more than 1 space between type and scope"
-                ]
+                "property": "type_separator",
+                "pattern": "/^\\s?$/",
+                "positiveCheck": true,
+                "errorMessage": "There must not be more than 1 space between type and scope"
             },
 
             "scope-outer-brackets": {
                 "type": "property-regex",
-                "parameters": [
-                    "scope_outer",
-                    "/^(\\(.*\\)|\\[.*\\]|{.*}|<.*>)?$/",
-                    true,
-                    "Scope must using matching brackets"
-                ]
+                "property": "scope_outer",
+                "pattern": "/^(\\(.*\\)|\\[.*\\]|{.*}|<.*>)?$/",
+                "positiveCheck": true,
+                "errorMessage": "Scope must using matching brackets"
             },
             "scope-start-separator-brackets": {
                 "type": "property-regex",
-                "parameters": [
-                    "scope_start_separator",
-                    "/^$/",
-                    true,
-                    "Scope must not start with space"
-                ]
+                "property": "scope_start_separator",
+                "pattern": "/^$/",
+                "positiveCheck": true,
+                "errorMessage": "Scope must not start with space"
             },
             "scope-end-separator-brackets": {
                 "type": "property-regex",
-                "parameters": [
-                    "scope_end_separator",
-                    "/^$/",
-                    true,
-                    "Scope must not end with spaces"
-                ]
+                "property": "scope_end_separator",
+                "pattern": "/^$/",
+                "positiveCheck": true,
+                "errorMessage": "Scope must not end with spaces"
             },
 
             "breaking-separator-regex": {
                 "type": "property-regex",
-                "parameters": [
-                    "breaking_separator",
-                    "/^\\s?$/",
-                    true,
-                    "There must not be more than 1 space before breaking change (!) marker"
-                ]
+                "property": "breaking_separator",
+                "pattern": "/^\\s?$/",
+                "positiveCheck": true,
+                "errorMessage": "There must not be more than 1 space before breaking change (!) marker"
             },
 
             "colon-separator-required": {
                 "type": "property-existence",
-                "parameters": [
-                    "colon_separator",
-                    false,
-                    "Must not have any space before colon (:) marker"
-                ]
+                "property": "colon_separator",
+                "positiveCheck": false,
+                "errorMessage": "Must not have any space before colon (:) marker"
             },
             "colon-required": {
                 "type": "property-existence",
-                "parameters": [
-                    "colon"
-                ]
+                "property": "colon"
             },
 
             "description-separator-regex": {
                 "type": "property-regex",
-                "parameters": [
-                    "description_separator",
-                    "/^\\s?$/",
-                    true,
-                    "There must not be more than 1 space before description"
-                ]
+                "property": "description_separator",
+                "pattern": "/^\\s?$/",
+                "positiveCheck": true,
+                "errorMessage": "There must not be more than 1 space before description"
             },
 
             "description-required": {
                 "type": "property-existence",
-                "parameters": [
-                    "description"
-                ]
+                "property": "description"
             },
             "description-regex": {
                 "type": "property-regex",
-                "parameters": [
-                    "description",
-                    "/^\\w+/",
-                    true,
-                    "Description must start with a valid word character"
-                ]
+                "property": "description",
+                "pattern": "/^\\w+/",
+                "positiveCheck": true,
+                "errorMessage": "Description must start with a valid word character"
             },
 
             "body-start-regex": {
                 "type": "property-regex",
-                "parameters": [
-                    "body",
-                    "/^\\n[^\\n]+/",
-                    true,
-                    "Body must start with a single new line."
-                ]
+                "property": "body",
+                "pattern": "/^\\n[^\\n]+/",
+                "positiveCheck": true,
+                "errorMessage": "Body must start with a single new line."
             },
             "body-paragraph-regex": {
                 "type": "property-regex",
-                "parameters": [
-                    "body",
-                    "/[^\\^]\\n\\n\\n/",
-                    false,
-                    "Paragraphs must be separated by a single line."
-                ]
+                "property": "body",
+                "pattern": "/[^\\^]\\n\\n\\n/",
+                "positiveCheck": false,
+                "errorMessage": "Paragraphs must be separated by a single line."
             }
         }
     }

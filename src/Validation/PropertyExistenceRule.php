@@ -8,11 +8,15 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertyExistenceRule extends PropertyRule
 {
+    protected string $property;
+    protected bool $positiveCheck = true;
+    protected string $errorMessage = 'Required property %s missing';
+
     public function __construct(
-        protected string $property,
-        protected bool $positiveCheck = true,
-        protected string $errorMessage = 'Required property %s missing',
-    ) {}
+        protected \stdClass $definition
+    ) {
+        parent::__construct($definition);
+    }
 
     public function performValidation(Message $message): self
     {
@@ -24,5 +28,17 @@ class PropertyExistenceRule extends PropertyRule
         }
 
         return $this;
+    }
+
+    protected function getRequiredProperties(): array
+    {
+        return array_merge(
+            parent::getRequiredProperties(),
+            [
+                'property' => 'string',
+                'positiveCheck' => 'boolean',
+                'errorMessage' => 'string',
+            ]
+        );
     }
 }

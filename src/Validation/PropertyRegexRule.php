@@ -8,13 +8,15 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertyRegexRule extends PropertyRule
 {
+    protected string $property;
+    protected string $pattern;
+    protected bool $positiveCheck = true;
+    protected string $errorMessage = 'Unexpected %s of value %s, does not conform to pattern: %s';
+
     public function __construct(
-        protected string $property,
-        protected string $pattern,
-        protected bool $positiveCheck = true,
-        protected string $errorMessage = 'Unexpected %s of value %s, does not conform to pattern: %s',
+        protected \stdClass $definition
     ) {
-        parent::__construct($property);
+        parent::__construct($definition);
     }
 
     public function performValidation(Message $message): self
@@ -32,5 +34,18 @@ class PropertyRegexRule extends PropertyRule
         }
 
         return $this;
+    }
+
+    protected function getRequiredProperties(): array
+    {
+        return array_merge(
+            parent::getRequiredProperties(),
+            [
+                'property' => 'string',
+                'pattern' => 'string',
+                'positiveCheck' => 'boolean',
+                'errorMessage' => 'string',
+            ]
+        );
     }
 }

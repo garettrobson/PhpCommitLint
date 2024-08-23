@@ -8,14 +8,17 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertySetRule extends PropertyRule
 {
-    /**
-     * @param array<string> $set
-     */
+    protected string $property;
+
+    /** @var array<string> */
+    protected array $set = [];
+    protected string $errorMessage = 'Unexpected %s of value %s, must be one of; %s';
+
     public function __construct(
-        protected string $property,
-        protected array $set = [],
-        protected string $errorMessage = 'Unexpected %s of value %s, must be one of; %s'
-    ) {}
+        protected \stdClass $definition
+    ) {
+        parent::__construct($definition);
+    }
 
     public function performValidation(Message $message): self
     {
@@ -32,5 +35,17 @@ class PropertySetRule extends PropertyRule
         }
 
         return $this;
+    }
+
+    protected function getRequiredProperties(): array
+    {
+        return array_merge(
+            parent::getRequiredProperties(),
+            [
+                'property' => 'string',
+                'set' => 'array',
+                'errorMessage' => 'string',
+            ]
+        );
     }
 }

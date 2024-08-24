@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Validation;
 
-use ReflectionProperty;
 use GarettRobson\PhpCommitLint\Message\Message;
 
 abstract class Rule
@@ -130,7 +129,8 @@ abstract class Rule
                     $property,
                     $type,
                 ));
-            } elseif(!(new ReflectionProperty('User', 'name'))->isInitialized($this)) {
+            }
+            if (!(new \ReflectionProperty('User', 'name'))->isInitialized($this)) {
                 throw new \RuntimeException(sprintf(
                     'Incorrectly configured class %s uninitialized optional property %s which expects %s',
                     __CLASS__,

@@ -6,7 +6,7 @@ A PHP tool for linting your commit messages.
 
 ### As a package
 
-_The recommended way to use this in development.s_
+_The recommended way to use this in development._
 
 First change directory to the composer project you want to use `php-commit-lint` on;
 
@@ -49,6 +49,64 @@ The following errors occurred:
 
  [ERROR] Commit message failed linting
 
+```
+
+### Global install
+
+When installing `php-commit-lint` as an executable which can run from anywhere on a system, it is recommended to continue to maintain the installation with git.
+
+First we need to create a new directory for the repository, and ensure our user can access it;
+
+```
+cd /usr/local/share
+sudo mkdir php-commit-lint
+sudo chown <username>:<usergroup> php-commit-lint -R
+```
+**Note:** The `<username>` and `<usergroup>` values should be replaces with suitable values for your system.
+
+Next, clone a fresh copy of the repository to your system;
+
+```
+git clone git@github.com:garettrobson/PhpCommitLint.git
+```
+
+Now we need to make symlinks to the executable scripts in the repository;
+
+```
+cd /usr/local/bin
+sudo ln -s ../share/php-commit-lint/php-commit-lint php-commit-lint
+sudo ln -s ../share/php-commit-lint/php-commit-lint-commit-msg php-commit-lint-commit-msg
+```
+**Note:** At this point php-commit-lint is installed, but no repositories will _automatically_ use this linter until they are individually configured.
+
+To test the setup we can now try to validate an arbitrary commit message;
+
+```
+echo 'try(bad scope): a description that is too long, and will fail because of numerous problems' | php-commit-lint-commit-msg
+```
+
+This should produce output similar to;
+
+```
+
+PHP Commit Lint: Message Lint
+=============================
+
+Messages
+--------
+
+- Line 1 is 90 characters long, exceeds 50 limit
+- Unexpected type of value try, must be one of; ["fix","feat","build","chore","ci","docs","style","refactor","perf","test"]
+
+
+ [ERROR] Commit message failed linting
+
+```
+
+Now we can setup a repository to actually use this linter;
+```
+cd /path/to/project/.git/hooks
+ln -s /usr/local/bin/php-commit-lint-commit-msg commit-msg
 ```
 
 ## Customization

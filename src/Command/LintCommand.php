@@ -28,7 +28,6 @@ class LintCommand extends PhpCommitLintCommand
         $rules = [];
         foreach ($this->validationConfiguration->getRules() as $rule) {
             $class = $rule->class;
-            $parameters = $rule->parameters ?? [];
 
             if (!is_string($class)) {
                 throw new \RuntimeException(sprintf(

@@ -57,7 +57,7 @@ When installing `php-commit-lint` as an executable which can run from anywhere o
 
 First we need to create a new directory for the repository, and ensure our user can access it;
 
-```
+```sh
 cd /usr/local/share
 sudo mkdir php-commit-lint
 sudo chown <username>:<usergroup> php-commit-lint -R
@@ -66,13 +66,13 @@ sudo chown <username>:<usergroup> php-commit-lint -R
 
 Next, clone a fresh copy of the repository to your system;
 
-```
+```sh
 git clone git@github.com:garettrobson/PhpCommitLint.git
 ```
 
 Now we need to make symlinks to the executable scripts in the repository;
 
-```
+```sh
 cd /usr/local/bin
 sudo ln -s ../share/php-commit-lint/php-commit-lint php-commit-lint
 sudo ln -s ../share/php-commit-lint/php-commit-lint-commit-msg php-commit-lint-commit-msg
@@ -81,7 +81,7 @@ sudo ln -s ../share/php-commit-lint/php-commit-lint-commit-msg php-commit-lint-c
 
 To test the setup we can now try to validate an arbitrary commit message;
 
-```
+```sh
 echo 'try(bad scope): a description that is too long, and will fail because of numerous problems' | php-commit-lint-commit-msg
 ```
 
@@ -104,7 +104,7 @@ Messages
 ```
 
 Now we can setup a repository to actually use this linter;
-```
+```sh
 cd /path/to/project/.git/hooks
 ln -s /usr/local/bin/php-commit-lint-commit-msg commit-msg
 ```

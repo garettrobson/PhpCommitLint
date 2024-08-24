@@ -36,63 +36,22 @@ abstract class Rule
         protected \stdClass $definition
     ) {
         $requiredProperties = $this->getRequiredProperties();
-
         $optionalProperties = $this->getOptionalProperties();
 
-        foreach ((array) $definition as $property => $value) {
-            if (isset($requiredProperties[$property])) {
-                if ($this->getType($value) !== $requiredProperties[$property]) {
-                    throw new \RuntimeException(sprintf(
-                        "Rule definition expected required property %s of type %s, received %s:\n%s",
-                        $property,
-                        $requiredProperties[$property],
-                        $this->getType($value),
-                        json_encode($definition, JSON_PRETTY_PRINT),
-                    ));
-                }
-            } elseif (isset($optionalProperties[$property])) {
-                if ($this->getType($value) !== $optionalProperties[$property]) {
-                    throw new \RuntimeException(sprintf(
-                        "Rule definition expected optional property %s of type %s, received %s:\n%s",
-                        $property,
-                        $optionalProperties[$property],
-                        $this->getType($value),
-                        json_encode($definition, JSON_PRETTY_PRINT),
-                    ));
-                }
-            } else {
-                throw new \RuntimeException(sprintf(
-                    "Rule definition found unexpected property %s found on rule:\n%s",
-                    $property,
-                    json_encode($definition, JSON_PRETTY_PRINT),
-                ));
-            }
+        $this->validateRuleProperties(
+            $requiredProperties,
+            $optionalProperties
+        );
 
-            if ($this->mapProperties) {
-                if (property_exists($this, $property)) {
-                    $this->{$property} = $value;
-                } elseif (isset($requiredProperties[$property])) {
-                    throw new \RuntimeException(sprintf(
-                        "Rule definition required property %s does not exist on class %s:\n%s",
-                        $property,
-                        __CLASS__,
-                        json_encode($definition, JSON_PRETTY_PRINT),
-                    ));
-                } elseif (isset($requiredProperties[$property])) {
-                    throw new \RuntimeException(sprintf(
-                        "Rule definition optional property %s does not exist on class %s:\n%s",
-                        $property,
-                        __CLASS__,
-                        json_encode($definition, JSON_PRETTY_PRINT),
-                    ));
-                } else {
-                    throw new \RuntimeException(sprintf(
-                        "Rule definition property %s is unexpected on class %s:\n%s",
-                        $property,
-                        __CLASS__,
-                        json_encode($definition, JSON_PRETTY_PRINT),
-                    ));
-                }
+        $this->validateDefinition(
+            $definition,
+            $requiredProperties,
+            $optionalProperties
+        );
+
+        if ($this->mapProperties) {
+            foreach ((array) $definition as $property => $value) {
+                $this->{$property} = $value;
             }
         }
     }
@@ -143,6 +102,75 @@ abstract class Rule
     }
 
     abstract public function performValidation(Message $message): self;
+
+    /**
+     * @param array<string, null|string> $requiredProperties
+     * @param array<string, null|string> $optionalProperties
+     */
+    protected function validateRuleProperties(array $requiredProperties, array $optionalProperties): void
+    {
+        // Required and Optional properties should all exist on this object
+        foreach ($requiredProperties as $property => $type) {
+            if (!property_exists($this, $property)) {
+                throw new \RuntimeException(sprintf(
+                    'Incorrectly configured class %s missing property %s which expects %s',
+                    __CLASS__,
+                    $property,
+                    $type,
+                ));
+            }
+        }
+
+        foreach ($optionalProperties as $property => $type) {
+            if (!property_exists($this, $property)) {
+                throw new \RuntimeException(sprintf(
+                    'Incorrectly configured class %s missing property %s which expects %s',
+                    __CLASS__,
+                    $property,
+                    $type,
+                ));
+            }
+        }
+    }
+
+    /**
+     * @param array<string, null|string> $requiredProperties
+     * @param array<string, null|string> $optionalProperties
+     */
+    protected function validateDefinition(\stdClass $definition, array $requiredProperties, array $optionalProperties): void
+    {
+        foreach ((array) $definition as $property => $value) {
+            if (isset($requiredProperties[$property])) {
+                if ($this->getType($value) !== $requiredProperties[$property]) {
+                    throw new \RuntimeException(sprintf(
+                        "Rule definition contradiction in class %s required property %s of type %s, received %s:\n%s",
+                        __CLASS__,
+                        $property,
+                        $requiredProperties[$property],
+                        $this->getType($value),
+                        json_encode($definition, JSON_PRETTY_PRINT),
+                    ));
+                }
+            } elseif (isset($optionalProperties[$property])) {
+                if ($this->getType($value) !== $optionalProperties[$property]) {
+                    throw new \RuntimeException(sprintf(
+                        "Rule definition contradiction in class %s optional property %s of type %s, received %s:\n%s",
+                        __CLASS__,
+                        $property,
+                        $optionalProperties[$property],
+                        $this->getType($value),
+                        json_encode($definition, JSON_PRETTY_PRINT),
+                    ));
+                }
+            } else {
+                throw new \RuntimeException(sprintf(
+                    "Rule definition found unexpected property %s found on rule:\n%s",
+                    $property,
+                    json_encode($definition, JSON_PRETTY_PRINT),
+                ));
+            }
+        }
+    }
 
     /** @return array<null|string> */
     protected function getRequiredProperties(): array

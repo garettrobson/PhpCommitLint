@@ -6,7 +6,7 @@
                 "property": "summary",
                 "pattern": "/^\\s*/",
                 "positiveCheck": true,
-                "errorMessage": "Summary can not have leading spaces"
+                "errorMessage": "The <comment>summary</comment> can not have leading spaces"
             },
 
             "type-required": {
@@ -35,7 +35,7 @@
                 "property": "type_separator",
                 "pattern": "/^\\s?$/",
                 "positiveCheck": true,
-                "errorMessage": "There must not be more than 1 space between type and scope"
+                "errorMessage": "There must not be more than <comment>1</comment> space between <comment>type</comment> and <comment>scope</comment>"
             },
 
             "scope-outer-brackets": {
@@ -43,21 +43,21 @@
                 "property": "scope_outer",
                 "pattern": "/^(\\(.*\\)|\\[.*\\]|{.*}|<.*>)?$/",
                 "positiveCheck": true,
-                "errorMessage": "Scope must using matching brackets"
+                "errorMessage": "Must have matching brackets around <comment>scope</comment>"
             },
             "scope-start-separator-brackets": {
                 "type": "property-regex",
                 "property": "scope_start_separator",
                 "pattern": "/^$/",
                 "positiveCheck": true,
-                "errorMessage": "Scope must not start with space"
+                "errorMessage": "There must not be any spaces between the <comment>scope opening bracket</comment> and <comment>scope</comment>"
             },
             "scope-end-separator-brackets": {
                 "type": "property-regex",
                 "property": "scope_end_separator",
                 "pattern": "/^$/",
                 "positiveCheck": true,
-                "errorMessage": "Scope must not end with spaces"
+                "errorMessage": "There must not be any spaces between the <comment>scope</comment> and <comment>scope closing bracket</comment>"
             },
 
             "breaking-separator-regex": {
@@ -65,18 +65,19 @@
                 "property": "breaking_separator",
                 "pattern": "/^\\s?$/",
                 "positiveCheck": true,
-                "errorMessage": "There must not be more than 1 space before breaking change (!) marker"
+                "errorMessage": "There must not be more than <comment>1</comment> space before breaking change <comment>!</comment> marker"
             },
 
             "colon-separator-required": {
                 "type": "property-existence",
                 "property": "colon_separator",
                 "positiveCheck": false,
-                "errorMessage": "Must not have any space before colon (:) marker"
+                "errorMessage": "Must not have any spaces before colon <comment>:</comment> marker"
             },
             "colon-required": {
                 "type": "property-existence",
-                "property": "colon"
+                "property": "colon",
+                "errorMessage": "The <comment>summary</comment> must contains a <comment>colon</comment>"
             },
 
             "description-separator-regex": {
@@ -84,19 +85,20 @@
                 "property": "description_separator",
                 "pattern": "/^\\s?$/",
                 "positiveCheck": true,
-                "errorMessage": "There must not be more than 1 space before description"
+                "errorMessage": "There must not be more than <comment>1</comment> space before <comment>description</comment>"
             },
 
             "description-required": {
                 "type": "property-existence",
-                "property": "description"
+                "property": "description",
+                "errorMessage": "The <comment>summary</comment> must contains a <comment>description</comment>"
             },
             "description-regex": {
                 "type": "property-regex",
                 "property": "description",
                 "pattern": "/^\\w+/",
                 "positiveCheck": true,
-                "errorMessage": "Description must start with a valid word character"
+                "errorMessage": "The <comment>description</comment> must start with a valid word character <comment>/\\W/i<comment>"
             },
 
             "body-start-regex": {
@@ -104,14 +106,14 @@
                 "property": "body",
                 "pattern": "/^\\n[^\\n]+/",
                 "positiveCheck": true,
-                "errorMessage": "Body must start with a single new line."
+                "errorMessage": "The <comment>body</comment> must start with a single new line"
             },
             "body-paragraph-regex": {
                 "type": "property-regex",
                 "property": "body",
                 "pattern": "/[^\\^]\\n\\n\\n/",
                 "positiveCheck": false,
-                "errorMessage": "Paragraphs must be separated by a single line."
+                "errorMessage": "Each <comment>paragraph</comment> of the <comment>body</comment> must be separated by a single new line"
             }
         }
     }

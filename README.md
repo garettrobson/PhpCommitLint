@@ -1,18 +1,21 @@
 # php-commit-lint
 
-A PHP tool for linting your commit messages.
+php-commit-lint is a PHP tool for linting your git commit messages, ensuring they follow consistent conventions and best practices.
+
+## Table of Contents
+- [Installation](#installation)
+  - [Install as dependency](#install-as-a-dependency)
+  - [Install globally](#install-globally)
+- [Customization](#customization)
+  - [Simple override files](#simple-override-files)
+  - [Override file syntax](#override-file-syntax)
+  - [Rule Definitions](#rule-definitions)
 
 ## Installation
 
-### As a package
+### Install as dependency
 
-_The recommended way to use this in development._
-
-First change directory to the composer project you want to use `php-commit-lint` on;
-
-```sh
-cd /my/project/path
-```
+_**This is the recommended way to use this in development.**_
 
 Require the `garettrobson/php-commit-lint` package as a `--dev` dependency;
 
@@ -23,37 +26,12 @@ composer req --dev garettrobson/php-commit-lint
 Symlink the `php-commit-lint-commit-msg` executable to the `.git/hooks/commit-msg` file in your repo;
 
 ```sh
-ln -s ../../vendor/bin/php-commit-lint-commit-msg .git/hooks/commit-msg
+ln -s \
+    ../../vendor/bin/php-commit-lint-commit-msg \
+    .git/hooks/commit-msg
 ```
 
-Test it works by trying to commit the change with an invalid commit message;
-
-```sh
-git add composer.json
-git commit -m 'try(bad scope): a description that is too long, and will fail because of numerous problems'
-```
-
-You should see output that looks similar to the following;
-
-```
-
-PHP Commit Lint
-===============
-
-The following errors occurred:
-- Title exceeds 50 characters
-- Type of try not allowed, must be one of: fix, feat, build, chore, ci, docs, style, refactor, perf, test
-- Scope "bad scope" does not conform to expected pattern: /^[\w-]+$/
-- Description "a description that is too long, and will fail because of numerous problems" does not conform to expected pattern: /^[A-Z0-9].*$/
-
-
- [ERROR] Commit message failed linting
-
-```
-
-### Global install
-
-When installing `php-commit-lint` as an executable which can run from anywhere on a system, it is recommended to continue to maintain the installation with git.
+### Install globally
 
 First we need to create a new directory for the repository, and ensure our user can access it;
 
@@ -64,105 +42,125 @@ sudo chown <username>:<usergroup> php-commit-lint -R
 ```
 **Note:** The `<username>` and `<usergroup>` values should be replaces with suitable values for your system.
 
-Next, clone a fresh copy of the repository to your system;
+Next, clone a fresh copy of the repository to your system and download the composer dependencies;
 
 ```sh
 git clone git@github.com:garettrobson/PhpCommitLint.git
+cd php-commit-lint
+composer update
 ```
 
 Now we need to make symlinks to the executable scripts in the repository;
 
 ```sh
 cd /usr/local/bin
-sudo ln -s ../share/php-commit-lint/php-commit-lint php-commit-lint
-sudo ln -s ../share/php-commit-lint/php-commit-lint-commit-msg php-commit-lint-commit-msg
-```
-**Note:** At this point php-commit-lint is installed, but no repositories will _automatically_ use this linter until they are individually configured.
-
-To test the setup we can now try to validate an arbitrary commit message;
-
-```sh
-echo 'try(bad scope): a description that is too long, and will fail because of numerous problems' | php-commit-lint-commit-msg
-```
-
-This should produce output similar to;
-
-```
-
-PHP Commit Lint: Message Lint
-=============================
-
-Messages
---------
-
-- Line 1 is 90 characters long, exceeds 50 limit
-- Unexpected type of value try, must be one of; ["fix","feat","build","chore","ci","docs","style","refactor","perf","test"]
-
-
- [ERROR] Commit message failed linting
-
+sudo ln -s \
+    ../share/php-commit-lint/php-commit-lint \
+    php-commit-lint
+sudo ln -s \
+    ../share/php-commit-lint/php-commit-lint-commit-msg \
+    php-commit-lint-commit-msg
 ```
 
 Now we can setup a repository to actually use this linter;
+
 ```sh
 cd /path/to/project/.git/hooks
-ln -s /usr/local/bin/php-commit-lint-commit-msg commit-msg
+ln -s \
+    /usr/local/bin/php-commit-lint-commit-msg \
+    commit-msg
 ```
 
 ## Customization
 
-When run `php-commit-lint` will load search for the closest `.php-commit-lint.json` file, first checking the current working directory then recursing parent directories, similar to how `git` looks for a `.git` directory. The `.php-commit-lint.json` shares the same syntax and structure as the other JSON-based configuration files used by `php-commit-lint`.
+The behaviour of the linter can be customized to meet specific needs through local overrides. These are files with the name `.php-commit-lint.json` which instruct the linter on, amongst other things, which rule sets to apply. When run the linter will attempt to load 2 override files;
+* The current users home directory - i.e `~/.php-commit-lint.json`.
+* The closest override from the current working directory - Starting from the current working directory and recursing parent directories (similar to how the `git` command finds the current repository)
 
-The json file should contain an object definition, not an array or any other valid JSON type data. This root node may contain any properties, however `php-commit-lint` is only interested in a small number of them. When a JSON file is included into the configuration system it processes the following keys, when present, in the following order.
+Ideally you would have common rule sets defined in the home directory local override file, with specific rule sets being used on a project-by-project basis.
 
-* `includes` - An array of paths (can be relative paths) to additional JSON files to import. These are immediately imported as they are discovered.
-* `using` - An array of string; each string naming a rule set to be used while linting. *NOTE*: When a `using` value is found it overrides any previous `using` values; effectively you only get the last `using` you included.
-* `patches` - An array containing objects conforming to the PHP Patch notation. These are **collected** across all included files.
-* `types` - An object that maps friendly and descriptive names to rule classes. The file `res/rules/types.json` contains the default set.
-* `ruleSets` - Rule sets are the most complex of the data types. The `ruleSets` property should map to an object, that object's properties map named rule set to an object defining that rule set. The rule set object maps a friendly rule name to a rule object. The rule object has only one required property `type`, which can either be a reference to a key in `types` (see above), or a FQCN. Optionally, you can provide the property `parameters` which will be passed to the constructor of the related `type`.
+### Using the wizard
 
-The following example;
+The `php-commit-lint` command comes with tool which will walk you though creating a local override file quickly. When inside a project directory run the `config:setup` command.
 
-***Note**: The property "comment" is used bellow to bring attention to important information about the objects it is associated with*
-
+```sh
+php-commit-lint config:setup
 ```
+
+The wizard will ask you a number of questions to determine the location to create the local override file and which rule sets to use. These choices can also be made by passing additional information as arguments and options.
+
+The following will setup a new local overrides file in the current directory using the `formatting50-72` and `conventional-commits-basic` rule sets;
+
+```sh
+php-commit-lint config:setup . \
+    -r formatting50-72 \
+    -r conventional-commits-basic \
+    -y
+```
+
+**`Example: /path/to/project/.php-commit-lint.json`**
+```json
 {
-    "ruleSets": {
+    "using": [
+        "formatting50-72",
+        "conventional-commits-basic"
+    ]
+}
+```
+
+### Override file syntax
+
+Override files shares the same syntax as the other JSON-based configuration files used by php-commit-lint (see the JSON files in the `res/` directory). The file must contain a JSON representation of the following data as described bellow
+
+* `configurationContainer` - An _object_ that may contain any of the following keys and associated data.
+    * `includes` - An **array of string paths** containing additional JSON files to import (Can be relative or absolute). These are immediately imported at the time they are discovered.
+    * `using` - An **array of string rule set names** contains the rule sets to use when linting. *NOTE*: When a `using` value is found it overrides any previous `using` values; effectively you only get the last `using` you included.
+    * `patches` - An **array of JSON Patch functions** to apply to the compiled rules. These are **appended** across all included files.
+    * `types` - An **object** that maps friendly and descriptive names to rule classes. The file `res/rules/types.json` contains the default set of rules.
+    * `ruleSets` - An **object** that maps rule set names to a rule set definition.
+        * `ruleSetDefinition` - An **object** that maps rule names to a rule definition.
+            * `ruleDefinition` - An **object** that describes a rule. See [Rule Definitions
+](#rule-definitions)
+
+The following contrived example demonstrates what a `.php-commit-lint.json` that has all of the above used in someway;
+
+**`Example: /home/someone/.php-commit-lint.json`**
+```json
+{
+    "include": [
+        "/path/an/absolute.json",
+        "../path/to/relative.json",
+    ],
+    "types": {
+        "example-type": "\\Vendor\\Package\\ExampleRule",
+    },
+    "ruleSets" : {
         "my-rule-set": {
             "my-rule": {
-                "type": "property-regex",
-                "note": "The first parameter is \"incorrect\" and should be \"type\", this is address with the first patch bellow"
-                "parameters":[
-                    "incorrect",
-                    "/^[^A-Z]*$/",
-                    "The type must be lowercase"
-                ]
-            },
-            "line-length": {
-                "note": "This is invalid, but will be overridden because the `using` property includes this named rule before basic, which redefines the line-length rule"
+                "type": "example-type",
+                "aParameter": "An example value"
             }
         }
     },
     "using": [
-        "my-rule-set",
-        "basic"
+        "my-rule-set"
     ],
     "patches": {
         {
             "op": "add",
-            "path": "/my-rule/parameters.0",
-            "value": ""
-        },
-        {
-            "op": "replace",
-            "path": "/line-length/parameters",
-            "value": [
-                [10, 0],
-                10
-            ]
+            "path": "/my-rule/aParameter",
+            "value": "An example overridden value"
         }
     }
 }
 ```
 
-### Collecting Rules and Apply Patches
+### Rule Definitions
+
+A php-commit-lint rule definition, in JSON, can consist of as little as a `type` which is a _string_ FQCN or a named `type` that resolved to a FQCN. Depending on the class being used there may be additional properties which can be set to further configure the rule. Examples of these exist in the `res/rules/` directory of the project.
+
+There are a small number of reserved keys when it comes to a rule definitions, these are generated at runtime for tracking and debugging;
+* `name` - The name of the rule that defined this definition
+* `from` - The name of the rule set that defined this definition
+* `class` - The FQCN resolved from `types`
+* `included` - Path of the file that included this definition

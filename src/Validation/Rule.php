@@ -114,7 +114,7 @@ abstract class Rule
             if (!property_exists($this, $property)) {
                 throw new \RuntimeException(sprintf(
                     'Incorrectly configured class %s missing property %s which expects %s',
-                    __CLASS__,
+                    static::class,
                     $property,
                     $type,
                 ));
@@ -125,7 +125,7 @@ abstract class Rule
             if (!property_exists($this, $property)) {
                 throw new \RuntimeException(sprintf(
                     'Incorrectly configured class %s missing property %s which expects %s',
-                    __CLASS__,
+                    static::class,
                     $property,
                     $type,
                 ));
@@ -133,7 +133,7 @@ abstract class Rule
             if (!(new \ReflectionProperty('User', 'name'))->isInitialized($this)) {
                 throw new \RuntimeException(sprintf(
                     'Incorrectly configured class %s uninitialized optional property %s which expects %s',
-                    __CLASS__,
+                    static::class,
                     $property,
                     $type,
                 ));
@@ -152,7 +152,7 @@ abstract class Rule
                 if ($this->getType($value) !== $requiredProperties[$property]) {
                     throw new \RuntimeException(sprintf(
                         "Rule definition contradiction in class %s required property %s of type %s, received %s:\n%s",
-                        __CLASS__,
+                        static::class,
                         $property,
                         $requiredProperties[$property],
                         $this->getType($value),
@@ -163,7 +163,7 @@ abstract class Rule
                 if ($this->getType($value) !== $optionalProperties[$property]) {
                     throw new \RuntimeException(sprintf(
                         "Rule definition contradiction in class %s optional property %s of type %s, received %s:\n%s",
-                        __CLASS__,
+                        static::class,
                         $property,
                         $optionalProperties[$property],
                         $this->getType($value),
@@ -172,7 +172,8 @@ abstract class Rule
                 }
             } else {
                 throw new \RuntimeException(sprintf(
-                    "Rule definition found unexpected property %s found on rule:\n%s",
+                    "Rule definition error in class %s found unexpected property %s found on rule:\n%s",
+                    static::class,
                     $property,
                     json_encode($definition, JSON_PRETTY_PRINT),
                 ));

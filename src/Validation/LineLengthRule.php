@@ -11,6 +11,8 @@ class LineLengthRule extends Rule
     /** @var array<int> */
     protected array $lineLengths = [50, 0];
     protected int $defaultLineLength = 72;
+    protected string $pattern;
+    protected bool $positiveCheck = true;
 
     public function __construct(
         protected \stdClass $definition
@@ -23,7 +25,10 @@ class LineLengthRule extends Rule
         $messageArray = explode("\n", $message->get('message'));
         foreach ($messageArray as $index => $line) {
             $lineLength = $this->lineLengths[$index] ?? $this->defaultLineLength;
-            if (strlen($line) > $lineLength) {
+            if (
+                (strlen($line) > $lineLength) &&
+                (preg_match($this->pattern, $line) ^ $this->positiveCheck)
+            ) {
                 $this->addMessage(
                     'Line %s is %s characters long, exceeds %s limit',
                     $index + 1,
@@ -43,6 +48,8 @@ class LineLengthRule extends Rule
             [
                 'lineLengths' => 'array',
                 'defaultLineLength' => 'integer',
+                'pattern' => 'string',
+                'positiveCheck' => 'boolean',
             ]
         );
     }

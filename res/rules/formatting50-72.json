@@ -4,7 +4,9 @@
             "line-length": {
                 "type": "line-length",
                 "lineLengths": [50, 0],
-                "defaultLineLength": 72
+                "defaultLineLength": 72,
+                "pattern": "/^\\s#/",
+                "positiveCheck": true
             }
         }
     }

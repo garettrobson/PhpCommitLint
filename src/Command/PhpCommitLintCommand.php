@@ -35,7 +35,7 @@ abstract class PhpCommitLintCommand extends Command
                 []
             )
             ->addOption(
-                'no-override',
+                'no-local',
                 'O',
                 InputOption::VALUE_NONE,
                 'Do not load any local overrides'
@@ -44,7 +44,7 @@ abstract class PhpCommitLintCommand extends Command
                 'no-home',
                 'H',
                 InputOption::VALUE_NONE,
-                'Do not load any local overrides'
+                'Do not load the home overrides'
             )
         ;
     }
@@ -63,7 +63,7 @@ abstract class PhpCommitLintCommand extends Command
             $this->includeHomeOverridePath($io, $includes);
         }
 
-        if (!$input->getOption('no-override')) {
+        if (!$input->getOption('no-local')) {
             $this->includeLocalOverridePath($io, $includes);
         }
 

@@ -92,43 +92,11 @@ class ConfigCommand extends PhpCommitLintCommand
 
         $io->section('Rule sets');
 
-        $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
-
         foreach ((array) $this->validationConfiguration->getRuleSets() as $ruleSetName => $ruleSet) {
             $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
 
             foreach ($ruleSet as $ruleName => $rule) {
-                $typeColor = in_array(
-                    $rule->type,
-                    $validTypes,
-                    true
-                ) ? 'text' : 'error';
-
-                $io->writeln(sprintf(
-                    ' <info>[%s]</info> <%3$s>%s</%3$s> (%4$s)',
-                    $rule->name,
-                    $rule->type,
-                    $typeColor,
-                    implode(
-                        ', ',
-                        array_map(
-                            fn ($parameter) => sprintf(
-                                '<comment>%s</comment>',
-                                (is_array($parameter) || is_object($parameter)) ?
-                                    json_encode($parameter, JSON_UNESCAPED_SLASHES) :
-                                    $parameter,
-                            ),
-                            $rule->parameters ?? [],
-                        )
-                    )
-                ));
-
-                if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-                    $io->writeln(
-                        sprintf(' - <info>Included:</info> <text>%s</text>', $rule->included),
-                        $io::VERBOSITY_VERY_VERBOSE
-                    );
-                }
+                $this->displayRuleInformation($io, $rule);
             }
         }
     }
@@ -137,47 +105,63 @@ class ConfigCommand extends PhpCommitLintCommand
     {
         $io->section('Using rules');
 
+        foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
+            $this->displayRuleInformation($io, $rule);
+        }
+    }
+
+    protected function displayRuleInformation(SymfonyStyle $io, \stdClass $rule): void
+    {
         $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
 
-        foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
-            $typeColor = in_array(
-                $rule->type,
-                $validTypes,
-                true
-            ) ? 'text' : 'error';
+        $typeColor = in_array(
+            $rule->type,
+            $validTypes,
+            true
+        ) ? 'text' : 'error';
 
-            $io->writeln(sprintf(
-                '<info>[%s]</info> <%3$s>%s</%3$s> (%4$s)',
-                $ruleName,
-                $rule->type,
-                $typeColor,
-                implode(
-                    ', ',
-                    array_map(
-                        fn ($parameter) => sprintf(
-                            '<comment>%s</comment>',
-                            is_array($parameter) ?
-                                json_encode($parameter, JSON_UNESCAPED_SLASHES) :
-                                $parameter,
-                        ),
-                        $rule->parameters ?? [],
+        $io->writeln(sprintf(
+            ' <info>[%s]</info> <%3$s>%s</%3$s>',
+            $rule->name,
+            $rule->type,
+            $typeColor,
+        ));
+
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERBOSE) {
+            $systemProperties = ['includes', 'class', 'from'];
+
+            $properties = (array) $rule;
+            $properties = array_intersect_key($properties, array_flip($systemProperties));
+
+            foreach ($properties as $key => $property) {
+                $io->writeln(
+                    sprintf(
+                        ' - <info>%s:</info> <text>%s</text>',
+                        $key,
+                        $property,
                     )
-                )
-            ));
+                );
+            }
+        }
 
-            if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-                $io->writeln(sprintf(
-                    ' - <info>Class:</info> <text>%s</text>',
-                    $rule->class
-                ));
-                $io->writeln(sprintf(
-                    ' - <info>Included:</info> <text>%s</text>',
-                    $rule->included
-                ));
-                $io->writeln(sprintf(
-                    ' - <info>From:</info> <text>%s</text>',
-                    $rule->from
-                ));
+        if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
+            $systemProperties = ['name', 'type', 'includes', 'class', 'from'];
+
+            $properties = (array) $rule;
+            $properties = array_diff_key($properties, array_flip($systemProperties));
+
+            foreach ($properties as $key => $property) {
+                $property = is_object($property) || is_array($property) ?
+                    json_encode($property) :
+                    $property;
+
+                $io->writeln(
+                    sprintf(
+                        ' - <comment>%s:</comment> <text>%s</text>',
+                        $key,
+                        $property,
+                    )
+                );
             }
         }
     }

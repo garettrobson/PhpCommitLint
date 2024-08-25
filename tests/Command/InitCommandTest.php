@@ -6,7 +6,7 @@ namespace GarettRobson\PhpCommitLint\Tests\Command;
 
 use GarettRobson\PhpCommitLint\Application\PhpCommitLintApplication;
 use GarettRobson\PhpCommitLint\Command\ConfigCommand;
-use GarettRobson\PhpCommitLint\Command\ConfigSetupCommand;
+use GarettRobson\PhpCommitLint\Command\InitCommand;
 use GarettRobson\PhpCommitLint\Command\LintCommand;
 use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
 use GarettRobson\PhpCommitLint\Message\Message;
@@ -39,14 +39,14 @@ use Symfony\Component\Console\Tester\CommandTester;
 #[CoversClass(ConfigCommand::class)]
 #[CoversClass(ValidatorConfiguration::class)]
 #[CoversClass(PropertyRegexRule::class)]
-#[CoversClass(ConfigSetupCommand::class)]
-class ConfigSetupCommandTest extends TestCase
+#[CoversClass(InitCommand::class)]
+class InitCommandTest extends TestCase
 {
     public function testNonInteractiveExecute(): void
     {
         $application = new PhpCommitLintApplication();
 
-        $command = $application->find('config:setup');
+        $command = $application->find('init');
         $commandTester = new CommandTester($command);
         $commandTester->execute(
             [
@@ -73,7 +73,7 @@ class ConfigSetupCommandTest extends TestCase
     {
         $application = new PhpCommitLintApplication();
 
-        $command = $application->find('config:setup');
+        $command = $application->find('init');
 
         $commandTester = new CommandTester($command);
 
@@ -96,7 +96,7 @@ class ConfigSetupCommandTest extends TestCase
     {
         $application = new PhpCommitLintApplication();
 
-        $command = $application->find('config:setup');
+        $command = $application->find('init');
 
         $commandTester = new CommandTester($command);
 

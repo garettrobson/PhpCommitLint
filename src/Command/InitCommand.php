@@ -14,13 +14,11 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Path;
 
-class ConfigSetupCommand extends PhpCommitLintCommand
+class InitCommand extends PhpCommitLintCommand
 {
-    protected bool $executeDefault = true;
-
     public function __construct()
     {
-        parent::__construct('config:setup');
+        parent::__construct('init');
     }
 
     /**

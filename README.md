@@ -81,10 +81,10 @@ Ideally you would have common rule sets defined in the home directory local over
 
 ### Using the wizard
 
-The `php-commit-lint` command comes with tool which will walk you though creating a local override file quickly. When inside a project directory run the `config:setup` command.
+The `php-commit-lint` command comes with tool which will walk you though creating a local override file quickly. When inside a project directory run the `init` command.
 
 ```sh
-php-commit-lint config:setup
+php-commit-lint init
 ```
 
 The wizard will ask you a number of questions to determine the location to create the local override file and which rule sets to use. These choices can also be made by passing additional information as arguments and options.
@@ -92,7 +92,7 @@ The wizard will ask you a number of questions to determine the location to creat
 The following will setup a new local overrides file in the current directory using the `formatting50-72` and `conventional-commits-basic` rule sets;
 
 ```sh
-php-commit-lint config:setup . \
+php-commit-lint init . \
     -r formatting50-72 \
     -r conventional-commits-basic \
     -y

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace GarettRobson\PhpCommitLint\Application;
 
 use GarettRobson\PhpCommitLint\Command\ConfigCommand;
-use GarettRobson\PhpCommitLint\Command\ConfigSetupCommand;
+use GarettRobson\PhpCommitLint\Command\InitCommand;
 use GarettRobson\PhpCommitLint\Command\LintCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -40,7 +40,7 @@ class PhpCommitLintApplication extends Application
         $this->addCommands([
             new LintCommand(),
             new ConfigCommand(),
-            new ConfigSetupCommand(),
+            new InitCommand(),
         ]);
     }
 

@@ -53,7 +53,8 @@ class InitCommandTest extends TestCase
                 'target-directory' => __DIR__.'/res/tmp',
                 '--rule-set' => ['formatting50-72'],
                 '--yes' => true,
-                '--no-override' => true,
+                '--no-local' => true,
+                '--no-home' => true,
             ],
             [
                 'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,

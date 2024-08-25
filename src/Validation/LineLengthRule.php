@@ -26,8 +26,8 @@ class LineLengthRule extends Rule
         foreach ($messageArray as $index => $line) {
             $lineLength = $this->lineLengths[$index] ?? $this->defaultLineLength;
             if (
-                (strlen($line) > $lineLength) &&
-                (preg_match($this->pattern, $line) ^ $this->positiveCheck)
+                (strlen($line) > $lineLength)
+                && (preg_match($this->pattern, $line) ^ $this->positiveCheck)
             ) {
                 $this->addMessage(
                     'Line %s is %s characters long, exceeds %s limit',

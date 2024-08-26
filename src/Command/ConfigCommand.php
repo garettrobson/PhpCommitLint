@@ -94,7 +94,7 @@ class ConfigCommand extends PhpCommitLintCommand
             $io->writeln(sprintf('<comment>%s:</comment>', $ruleSetName));
 
             foreach ($ruleSet as $ruleName => $rule) {
-                $this->displayRuleInformation($io, $rule);
+                $this->displayRule($io, $rule);
             }
         }
     }
@@ -104,11 +104,11 @@ class ConfigCommand extends PhpCommitLintCommand
         $io->section('Using rules');
 
         foreach ($this->validationConfiguration->getRules() as $ruleName => $rule) {
-            $this->displayRuleInformation($io, $rule);
+            $this->displayRule($io, $rule);
         }
     }
 
-    protected function displayRuleInformation(SymfonyStyle $io, \stdClass $rule): void
+    protected function displayRule(SymfonyStyle $io, \stdClass $rule): void
     {
         $validTypes = array_keys(get_object_vars($this->validationConfiguration->getTypes()));
 

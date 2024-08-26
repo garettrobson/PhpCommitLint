@@ -126,7 +126,7 @@ class ConfigCommand extends PhpCommitLintCommand
         ));
 
         if ($io->getVerbosity() >= $io::VERBOSITY_VERBOSE) {
-            $systemProperties = ['includes', 'class', 'from'];
+            $systemProperties = ['class', 'from', 'included'];
 
             $properties = (array) $rule;
             $properties = array_intersect_key($properties, array_flip($systemProperties));
@@ -143,7 +143,7 @@ class ConfigCommand extends PhpCommitLintCommand
         }
 
         if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {
-            $systemProperties = ['name', 'type', 'includes', 'class', 'from'];
+            $systemProperties = ['name', 'type', 'included', 'class', 'from'];
 
             $properties = (array) $rule;
             $properties = array_diff_key($properties, array_flip($systemProperties));

@@ -16,7 +16,7 @@ class Validator
     ) {
         usort(
             $rules,
-            fn($ruleA, $ruleB) => $ruleA->compare($ruleB)
+            fn ($ruleA, $ruleB) => $ruleA->compare($ruleB)
         );
     }
 
@@ -28,7 +28,7 @@ class Validator
         $validationMessages = [];
         foreach ($this->rules as $rule) {
             $messages = $rule->validate($message);
-            if($rule->isPass() && $messages) {
+            if ($rule->isPass() && $messages) {
                 return [];
             }
             array_push($validationMessages, ...$messages);

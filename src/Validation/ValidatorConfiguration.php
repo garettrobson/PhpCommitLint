@@ -131,7 +131,7 @@ class ValidatorConfiguration
         }
 
         // Poor-mans cloning
-        $rules = json_decode(json_encode($rules));
+        $rules = json_decode(json_encode($rules, JSON_THROW_ON_ERROR));
 
         $patch = JsonPatch::import($this->patches);
         $patch->apply($rules, true);

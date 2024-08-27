@@ -58,7 +58,8 @@ abstract class Rule
         }
     }
 
-    public function isPass() {
+    public function isPass(): bool
+    {
         return $this->pass;
     }
 
@@ -108,6 +109,21 @@ abstract class Rule
     }
 
     abstract public function performValidation(Message $message): self;
+
+    public function compare(Rule $rule): int
+    {
+        switch (true) {
+            case $this->pass === $rule->pass:
+            default:
+                return 0;
+
+            case $this->pass > $rule->pass:
+                return 1;
+
+            case $this->pass < $rule->pass:
+                return -1;
+        }
+    }
 
     /**
      * @param array<string, null|string> $requiredProperties
@@ -206,17 +222,5 @@ abstract class Rule
         }
 
         return gettype($mixed);
-    }
-
-    public function compare($rule) {
-        switch(true){
-            case $this->pass === $rule->pass:
-            default:
-                return 0;
-            case $this->pass > $rule->pass:
-                return 1;
-            case $this->pass < $rule->pass:
-                return -1;
-        }
     }
 }

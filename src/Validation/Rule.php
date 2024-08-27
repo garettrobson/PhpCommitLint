@@ -12,6 +12,7 @@ abstract class Rule
     protected array $errors = [];
 
     protected string $type;
+    protected bool $pass = false;
     protected string $name;
     protected string $included;
     protected string $from;
@@ -28,6 +29,7 @@ abstract class Rule
 
     /** @var array<string, string> */
     protected array $optionalProperties = [
+        'pass' => 'boolean',
     ];
 
     protected bool $mapProperties = true;
@@ -54,6 +56,10 @@ abstract class Rule
                 $this->{$property} = $value;
             }
         }
+    }
+
+    public function isPass() {
+        return $this->pass;
     }
 
     /**
@@ -200,5 +206,17 @@ abstract class Rule
         }
 
         return gettype($mixed);
+    }
+
+    public function compare($rule) {
+        switch(true){
+            case $this->pass === $rule->pass:
+            default:
+                return 0;
+            case $this->pass > $rule->pass:
+                return 1;
+            case $this->pass < $rule->pass:
+                return -1;
+        }
     }
 }

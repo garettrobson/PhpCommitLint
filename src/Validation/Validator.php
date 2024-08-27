@@ -13,18 +13,27 @@ class Validator
      */
     public function __construct(
         protected array $rules = []
-    ) {}
+    ) {
+        usort(
+            $rules,
+            fn($ruleA, $ruleB) => $ruleA->compare($ruleB)
+        );
+    }
 
     /**
      * @return array<string>
      */
     public function validate(Message $message): array
     {
-        $errors = [];
+        $validationMessages = [];
         foreach ($this->rules as $rule) {
-            array_push($errors, ...$rule->validate($message));
+            $messages = $rule->validate($message);
+            if($rule->isPass() && $messages) {
+                return [];
+            }
+            array_push($validationMessages, ...$messages);
         }
 
-        return $errors;
+        return $validationMessages;
     }
 }

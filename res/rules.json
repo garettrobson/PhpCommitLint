@@ -1,11 +1,13 @@
 {
     "includes": [
         "rules/types.json",
+        "rules/git-system.json",
         "rules/formatting50-72.json",
         "rules/conventional-commits-basic.json",
         "rules/conventional-commits-strict.json"
     ],
     "using": [
+        "git-system",
         "formatting50-72",
         "conventional-commits-basic"
     ]

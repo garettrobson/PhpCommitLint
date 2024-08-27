@@ -4,9 +4,16 @@
             "summary-no-leading-spaces": {
                 "type": "property-regex",
                 "property": "summary",
-                "pattern": "/^\\s*/",
-                "positiveCheck": true,
+                "pattern": "/^\\s+/",
+                "positiveCheck": false,
                 "errorMessage": "The <comment>summary</comment> can not have leading spaces"
+            },
+            "summary-no-trailing-spaces": {
+                "type": "property-regex",
+                "property": "summary",
+                "pattern": "/\\s+$/",
+                "positiveCheck": false,
+                "errorMessage": "The <comment>summary</comment> can not have trailing spaces"
             },
 
             "type-required": {

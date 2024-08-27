@@ -4,7 +4,7 @@
             "git-merge-message": {
                 "type": "property-regex",
                 "property": "summary",
-                "pattern": "/^Merge \\w+ '[^']+'( into '([^']*)'|$)/",
+                "pattern": "/^Merge \\w+ '[^']+'( into '[^']+'|$)/",
                 "positiveCheck": false,
                 "errorMessage": "Merge branch",
                 "pass": true

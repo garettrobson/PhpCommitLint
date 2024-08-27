@@ -13,7 +13,6 @@
 )
 ^
 (?<message>
-	(?<summary_separator>[ \t]+)?
 	(?<summary>
 		(?:
 			(?<type>(?P>type_words))?

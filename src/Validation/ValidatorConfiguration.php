@@ -130,6 +130,9 @@ class ValidatorConfiguration
             );
         }
 
+        // Poor-mans cloning
+        $rules = json_decode(json_encode($rules));
+
         $patch = JsonPatch::import($this->patches);
         $patch->apply($rules, true);
 

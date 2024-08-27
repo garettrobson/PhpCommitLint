@@ -113,7 +113,7 @@ abstract class Rule
         foreach ($requiredProperties as $property => $type) {
             if (!property_exists($this, $property)) {
                 throw new \RuntimeException(sprintf(
-                    'Incorrectly configured class %s missing property %s which expects %s',
+                    'Incorrectly configured class %s missing property %s with expected type %s',
                     static::class,
                     $property,
                     $type,
@@ -124,15 +124,15 @@ abstract class Rule
         foreach ($optionalProperties as $property => $type) {
             if (!property_exists($this, $property)) {
                 throw new \RuntimeException(sprintf(
-                    'Incorrectly configured class %s missing property %s which expects %s',
+                    'Incorrectly configured class %s missing property %s with expected type %s',
                     static::class,
                     $property,
                     $type,
                 ));
             }
-            if (!(new \ReflectionProperty('User', 'name'))->isInitialized($this)) {
+            if (!(new \ReflectionProperty(static::class, $property))->isInitialized($this)) {
                 throw new \RuntimeException(sprintf(
-                    'Incorrectly configured class %s uninitialized optional property %s which expects %s',
+                    'Incorrectly configured class %s uninitialized optional property %s with expected type %s',
                     static::class,
                     $property,
                     $type,

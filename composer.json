@@ -6,7 +6,8 @@
     "require": {
         "symfony/console": "*",
         "symfony/filesystem": "*",
-        "swaggest/json-diff": "*"
+        "swaggest/json-diff": "*",
+        "symfony/process": "^7.1"
     },
     "require-dev": {
         "phpunit/phpunit": "*",

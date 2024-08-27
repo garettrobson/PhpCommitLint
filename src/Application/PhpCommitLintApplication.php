@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Application;
 
+use Composer\InstalledVersions;
 use GarettRobson\PhpCommitLint\Command\ConfigCommand;
 use GarettRobson\PhpCommitLint\Command\InitCommand;
 use GarettRobson\PhpCommitLint\Command\LintCommand;
+use GarettRobson\PhpCommitLint\Command\SelfUpdateCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,11 +39,17 @@ class PhpCommitLintApplication extends Application
             'error';
 
         parent::__construct($name, $version);
+
         $this->addCommands([
             new LintCommand(),
             new ConfigCommand(),
             new InitCommand(),
         ]);
+
+        $rootPackage = InstalledVersions::getRootPackage();
+        if ($rootPackage['name'] === $name) {
+            $this->addCommands([new SelfUpdateCommand()]);
+        }
     }
 
     protected function configureIO(InputInterface $input, OutputInterface $output): void

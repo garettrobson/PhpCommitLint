@@ -80,8 +80,11 @@ abstract class PhpCommitLintCommand extends Command
     protected function includeHomeOverridePath(SymfonyStyle $io, array &$includes): void
     {
         $home = Path::getHomeDirectory();
-
         if (!$home) {
+            $io->writeln(
+                ['<error>No home directory found</error>', ''],
+                $io::VERBOSITY_VERBOSE
+            );
             return;
         }
 

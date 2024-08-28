@@ -99,7 +99,7 @@ abstract class PhpCommitLintCommand extends Command
             );
         } else {
             $io->writeln(
-                '<comment>No local override found</comment>',
+                '<comment>No home override found</comment>',
                 $io::VERBOSITY_VERBOSE
             );
         }

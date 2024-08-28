@@ -73,6 +73,8 @@ class SelfUpdateCommand extends PhpCommitLintCommand
             $this->runProcess($io, ['git', '-C', $installPath, 'pull']);
         }
 
+        $this->runProcess($io, ['composer', '-d', $installPath, 'update']);
+
         return self::SUCCESS;
     }
 

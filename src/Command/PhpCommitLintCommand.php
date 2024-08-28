@@ -85,6 +85,7 @@ abstract class PhpCommitLintCommand extends Command
                 ['<error>No home directory found</error>', ''],
                 $io::VERBOSITY_VERBOSE
             );
+
             return;
         }
 

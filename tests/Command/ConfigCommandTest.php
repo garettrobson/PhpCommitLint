@@ -8,7 +8,7 @@ use GarettRobson\PhpCommitLint\Application\PhpCommitLintApplication;
 use GarettRobson\PhpCommitLint\Command\ConfigCommand;
 use GarettRobson\PhpCommitLint\Command\InitCommand;
 use GarettRobson\PhpCommitLint\Command\LintCommand;
-use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
+use GarettRobson\PhpCommitLint\Command\SelfUpdateCommand;
 use GarettRobson\PhpCommitLint\Message\Message;
 use GarettRobson\PhpCommitLint\Message\MessageParser;
 use GarettRobson\PhpCommitLint\Message\PatternFileMessageParser;
@@ -28,7 +28,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 #[CoversClass(LintCommand::class)]
 #[CoversClass(PhpCommitLintApplication::class)]
-#[CoversClass(ConventionalCommitsMessageParser::class)]
 #[CoversClass(MessageParser::class)]
 #[CoversClass(PatternFileMessageParser::class)]
 #[CoversClass(Message::class)]
@@ -40,6 +39,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 #[CoversClass(ValidatorConfiguration::class)]
 #[CoversClass(PropertyRegexRule::class)]
 #[CoversClass(InitCommand::class)]
+#[CoversClass(SelfUpdateCommand::class)]
 class ConfigCommandTest extends TestCase
 {
     public function testExecute(): void

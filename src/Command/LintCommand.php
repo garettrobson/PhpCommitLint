@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GarettRobson\PhpCommitLint\Command;
 
-use GarettRobson\PhpCommitLint\Message\ConventionalCommitsMessageParser;
+use GarettRobson\PhpCommitLint\Message\PatternFileMessageParser;
 use GarettRobson\PhpCommitLint\Validation\Rule;
 use GarettRobson\PhpCommitLint\Validation\Validator;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -127,7 +127,7 @@ HELP)
             $io->writeln(sprintf('<text>%s</text>', $commitMessage));
         }
 
-        $messageParser = new ConventionalCommitsMessageParser();
+        $messageParser = new PatternFileMessageParser(__DIR__.'/../../res/conventional-commits.regex.pattern');
         $message = $messageParser->parseMessage($commitMessage);
 
         if ($io->getVerbosity() >= $io::VERBOSITY_VERY_VERBOSE) {

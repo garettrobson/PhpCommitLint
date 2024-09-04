@@ -13,63 +13,65 @@ php-commit-lint is a PHP tool for linting your git commit messages, ensuring the
 
 ## Installation
 
-### Install as dependency
-
-_**This is the recommended way to use this in development.**_
-
-Require the `garettrobson/php-commit-lint` package as a `--dev` dependency;
-
-```sh
-composer req --dev garettrobson/php-commit-lint
-```
-
-Symlink the `php-commit-lint-commit-msg` executable to the `.git/hooks/commit-msg` file in your repo;
-
-```sh
-ln -s \
-    ../../vendor/bin/php-commit-lint-commit-msg \
-    .git/hooks/commit-msg
-```
-
 ### Install globally
 
-First we need to create a new directory for the repository, and ensure our user can access it;
+The following process is how I came to have this setup on my local Ubuntu machine, where I am the only user. By virtue of being the most robustly field-tested it is the recommended process. Some specifics, such as paths, may vary depending on your own environment. I have no experience, nor know of anyone using this in, a Windows environment; so good luck and let me know.
 
-```sh
-cd /usr/local/share
-sudo mkdir php-commit-lint
-sudo chown <username>:<usergroup> php-commit-lint -R
-```
-**Note:** The `<username>` and `<usergroup>` values should be replaces with suitable values for your system.
+This process instantiates a clone of the repo in a system area and makes it available to all user on the system (depending on OS/FS settings).
 
-Next, clone a fresh copy of the repository to your system and download the composer dependencies;
+1. First we need to create a new directory for the repository, and ensure our user can access it;
 
-```sh
-git clone git@github.com:garettrobson/PhpCommitLint.git
-cd php-commit-lint
-composer update
-```
+    ```sh
+    cd /usr/local/share
+    sudo mkdir php-commit-lint
+    sudo chown <username>:<usergroup> php-commit-lint -R
+    ```
+    **Note:** The `<username>` and `<usergroup>` values should be replaces with suitable values for your system.
 
-Now we need to make symlinks to the executable scripts in the repository;
+2. Next, clone a fresh copy of the repository to your system and download the composer dependencies;
 
-```sh
-cd /usr/local/bin
-sudo ln -s \
-    ../share/php-commit-lint/php-commit-lint \
-    php-commit-lint
-sudo ln -s \
-    ../share/php-commit-lint/php-commit-lint-commit-msg \
-    php-commit-lint-commit-msg
-```
+    ```sh
+    git clone git@github.com:garettrobson/PhpCommitLint.git
+    cd php-commit-lint
+    composer update
+    ```
 
-Now we can setup a repository to actually use this linter;
+3. Now we need to make symlinks to the executable scripts in the repository;
 
-```sh
-cd /path/to/project/.git/hooks
-ln -s \
-    /usr/local/bin/php-commit-lint-commit-msg \
-    commit-msg
-```
+   ```sh
+   cd /usr/local/bin
+   sudo ln -s \
+       ../share/php-commit-lint/php-commit-lint \
+       php-commit-lint
+   sudo ln -s \
+       ../share/php-commit-lint/php-commit-lint-commit-msg \
+       php-commit-lint-commit-msg
+   ```
+
+4. Now we can setup a repository to actually use this linter;
+
+    ```sh
+    cd /path/to/project/.git/hooks
+    ln -s \
+        /usr/local/bin/php-commit-lint-commit-msg \
+        commit-msg
+    ```
+
+### Install as dependency
+
+1. Require the `garettrobson/php-commit-lint` package as a `--dev` dependency;
+
+    ```sh
+    composer req --dev garettrobson/php-commit-lint
+    ```
+
+2. Symlink the `php-commit-lint-commit-msg` executable to the `.git/hooks/commit-msg` file in your repo;
+
+    ```sh
+    ln -s \
+        ../../vendor/bin/php-commit-lint-commit-msg \
+        .git/hooks/commit-msg
+    ```
 
 ## Customization
 

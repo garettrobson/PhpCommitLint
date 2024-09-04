@@ -4,10 +4,10 @@ php-commit-lint is a PHP tool for linting your git commit messages, ensuring the
 
 ## Table of Contents
 - [Installation](#installation)
-  - [Install as dependency](#install-as-a-dependency)
   - [Install globally](#install-globally)
+  - [Install as a dependency](#install-as-a-dependency)
 - [Customization](#customization)
-  - [Simple override files](#simple-override-files)
+  - [Using the wizard](#using-the-wizard)
   - [Override file syntax](#override-file-syntax)
   - [Rule Definitions](#rule-definitions)
 
@@ -57,7 +57,7 @@ This process instantiates a clone of the repo in a system area and makes it avai
         commit-msg
     ```
 
-### Install as dependency
+### Install as a dependency
 
 1. Require the `garettrobson/php-commit-lint` package as a `--dev` dependency;
 

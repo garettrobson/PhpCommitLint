@@ -6,10 +6,12 @@ php-commit-lint is a PHP tool for linting your git commit messages, ensuring the
 - [Installation](#installation)
   - [Install globally](#install-globally)
   - [Install as a dependency](#install-as-a-dependency)
+- [Usage](#usage)
 - [Customization](#customization)
   - [Using the wizard](#using-the-wizard)
   - [Override file syntax](#override-file-syntax)
-  - [Rule Definitions](#rule-definitions)
+  - [Rule definitions](#rule-definitions)
+  - [Compiled rules](#compiled-rules)
 
 ## Installation
 
@@ -191,7 +193,7 @@ The following example demonstrates what a `.php-commit-lint.json` that has all o
 }
 ```
 
-### Rule Definitions
+### Rule definitions
 
 A php-commit-lint rule definition, in JSON, can consist of as little as a `type` which is a _string_ FQCN or a named `type` that resolved to a FQCN. Depending on the class being used there may be additional properties which can be set to further configure the rule. Examples of these exist in the `res/rules/` directory of the project.
 

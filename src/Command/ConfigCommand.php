@@ -83,6 +83,23 @@ class ConfigCommand extends PhpCommitLintCommand
                 $typeClass,
                 $classColor,
             ));
+
+            if ($io->getVerbosity() >= $io::VERBOSITY_VERBOSE) {
+                foreach($typeClass::getRequiredProperties() ?? [] as $propertyName => $propertyType) {
+                    $io->writeln(sprintf(
+                        '  - <comment>%s</comment>: %s',
+                        $propertyName,
+                        $propertyType,
+                    ));
+                }
+                foreach($typeClass::getOptionalProperties() ?? [] as $propertyName => $propertyType) {
+                    $io->writeln(sprintf(
+                        '  - <info>%s</info>: %s',
+                        $propertyName,
+                        $propertyType,
+                    ));
+                }
+            }
         }
     }
 

@@ -147,7 +147,7 @@ php-commit-lint init . \
 
 ### Override file syntax
 
-Override files shares the same syntax as the other JSON-based configuration files used by php-commit-lint (see the JSON files in the `res/` directory). The file must contain a JSON representation of the following data as described bellow
+Override files shares the same syntax as the other JSON-based configuration files used by `php-commit-lint` (see the JSON files in the `res/` directory). The file must contain a JSON representation of the following data as described bellow
 
 * `configurationContainer` - An _object_ that may contain any of the following keys and associated data.
     * `includes` - An **array of string paths** containing additional JSON files to import (Can be relative or absolute). These are immediately imported at the time they are discovered.

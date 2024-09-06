@@ -18,6 +18,8 @@ abstract class Rule
     protected string $from;
     protected string $class;
 
+    protected bool $mapProperties = true;
+
     /** @var array<string, string> */
     private static array $requiredProperties = [
         'type' => 'string',
@@ -31,8 +33,6 @@ abstract class Rule
     private static array $optionalProperties = [
         'pass' => 'boolean',
     ];
-
-    protected bool $mapProperties = true;
 
     protected function __construct(
         protected \stdClass $definition
@@ -125,6 +125,18 @@ abstract class Rule
         }
     }
 
+    /** @return array<null|string> */
+    public static function getRequiredProperties(): array
+    {
+        return self::$requiredProperties ?? [];
+    }
+
+    /** @return array<null|string> */
+    public static function getOptionalProperties(): array
+    {
+        return self::$optionalProperties ?? [];
+    }
+
     /**
      * @param array<string, null|string> $requiredProperties
      * @param array<string, null|string> $optionalProperties
@@ -171,7 +183,7 @@ abstract class Rule
     {
         foreach ((array) $definition as $property => $value) {
             if (isset($requiredProperties[$property])) {
-                if ($this->getType($value) !== $requiredProperties[$property]) {
+                if (!$this->validType($value, $requiredProperties[$property])) {
                     throw new \RuntimeException(sprintf(
                         "Rule definition contradiction in class %s required property %s of type %s, received %s:\n%s",
                         static::class,
@@ -182,7 +194,7 @@ abstract class Rule
                     ));
                 }
             } elseif (isset($optionalProperties[$property])) {
-                if ($this->getType($value) !== $optionalProperties[$property]) {
+                if (!$this->validType($value, $optionalProperties[$property])) {
                     throw new \RuntimeException(sprintf(
                         "Rule definition contradiction in class %s optional property %s of type %s, received %s:\n%s",
                         static::class,
@@ -203,16 +215,12 @@ abstract class Rule
         }
     }
 
-    /** @return array<null|string> */
-    public static function getRequiredProperties(): array
+    protected function validType(mixed $test, string $valid): bool
     {
-        return static::$requiredProperties;
-    }
+        $type = $this->getType($test);
+        $valid = explode('|', $valid);
 
-    /** @return array<null|string> */
-    public static function getOptionalProperties(): array
-    {
-        return static::$optionalProperties;
+        return in_array($type, $valid, true);
     }
 
     protected function getType(mixed $mixed): string

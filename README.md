@@ -57,6 +57,12 @@ This process instantiates a clone of the repo in a system area and makes it avai
         commit-msg
     ```
 
+5. Auto completion can be enable by following the steps of the `configuration` command.
+
+    ```sh
+    php-commit-lint completion --help
+    ```
+
 ### Install as a dependency
 
 1. Require the `garettrobson/php-commit-lint` package as a `--dev` dependency;

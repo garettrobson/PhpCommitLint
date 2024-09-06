@@ -195,7 +195,7 @@ The following example demonstrates what a `.php-commit-lint.json` that has all o
 
 ### Rule definitions
 
-A php-commit-lint rule definition, in JSON, can consist of as little as a `type` which is a _string_ FQCN or a named `type` that resolved to a FQCN. Depending on the class being used there may be additional properties which can be set to further configure the rule. Examples of these exist in the `res/rules/` directory of the project. Rules also have a boolean `passing` property, which defines if the rule is passing (The linter successfully passes the message being linted) or failing (where messages about the failing condition are accumulated and displayed before the linting fails)
+A php-commit-lint rule definition, in JSON, can consist of as little as a `type` which is a _string_ FQCN or a named `type` that resolved to a FQCN. Depending on the class being used there may be additional properties which can be set to further configure the rule. Examples of these exist in the `res/rules/` directory of the project. Rules also have a boolean `passing` property, which defines if the rule is _passing_ (The linter successfully passes the message being linted) or _failing_ (The linter records the failures and displays them before finally failing the message). All passing rules are executed first before any failing rules.
 
 There are a small number of reserved keys when it comes to a rule definitions, these are generated at runtime for tracking and debugging;
 * `name` - The name of the rule that defined this definition

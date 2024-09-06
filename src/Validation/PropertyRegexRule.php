@@ -8,7 +8,6 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertyRegexRule extends PropertyRule
 {
-    protected string $property;
     protected string $pattern;
     protected bool $positiveCheck = true;
     protected string $errorMessage = 'Unexpected %s of value %s, does not conform to pattern: %s';
@@ -41,10 +40,8 @@ class PropertyRegexRule extends PropertyRule
         return array_merge(
             parent::getRequiredProperties(),
             [
-                'property' => 'string',
                 'pattern' => 'string',
                 'positiveCheck' => 'boolean',
-                'errorMessage' => 'string',
             ]
         );
     }

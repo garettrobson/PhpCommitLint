@@ -8,7 +8,6 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertyExistenceRule extends PropertyRule
 {
-    protected string $property;
     protected bool $positiveCheck = true;
     protected string $errorMessage = 'Required property %s missing';
 
@@ -35,9 +34,7 @@ class PropertyExistenceRule extends PropertyRule
         return array_merge(
             parent::getRequiredProperties(),
             [
-                'property' => 'string',
                 'positiveCheck' => 'boolean',
-                'errorMessage' => 'string',
             ]
         );
     }

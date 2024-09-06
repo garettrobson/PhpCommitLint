@@ -8,8 +8,6 @@ use GarettRobson\PhpCommitLint\Message\Message;
 
 class PropertySetRule extends PropertyRule
 {
-    protected string $property;
-
     /** @var array<string> */
     protected array $set = [];
     protected string $errorMessage = 'Unexpected %s of value %s, must be one of; %s';
@@ -42,9 +40,7 @@ class PropertySetRule extends PropertyRule
         return array_merge(
             parent::getRequiredProperties(),
             [
-                'property' => 'string',
                 'set' => 'array',
-                'errorMessage' => 'string',
             ]
         );
     }

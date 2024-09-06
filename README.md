@@ -92,9 +92,9 @@ php-commit-lint lint a-test-message.txt
 ```
 
 > [!Note]
-> In all these examples you can replace `php-commit-lint lint` with `php-commit-lint-commit-msg` as these are equivalent.
+> In all these examples you can replace `php-commit-lint lint` with `php-commit-lint-commit-msg` as they are equivalent.
 
-The `config` command is helpful in understanding the rules that are being used when run from a particular directory;
+The `config` command is helpful in understanding which rules that are being used when run from a particular directory;
 
 ```sh
 # Compact
@@ -104,7 +104,9 @@ php-commit-lint config -tru -vvv
 ```
 
 > [!Note]
-> By default it will display **u**seing rules (`-u, --using`), but can be display **t**ypes (`-y, --types`) and **r**ule sets (`-r, --rule-sets`). Adding verbosity (`-v|vv|vvv, --verbose`) will increase the amount of detail provided in each view.
+> By default `config` will display **u**seing rules (`-u, --using`), but can be display **t**ypes (`-y, --types`) and **r**ule sets (`-r, --rule-sets`). Adding verbosity (`-v|vv|vvv, --verbose`) will increase the amount of detail provided in each view.
+
+The `init` command will guide you through creating an override file, this is explained more in the [Using the wizard](#using-the-wizard) section.
 
 ## Customization
 

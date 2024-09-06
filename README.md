@@ -79,6 +79,33 @@ This process instantiates a clone of the repo in a system area and makes it avai
         .git/hooks/commit-msg
     ```
 
+## Usage
+
+There are two entry-point scripts; `./php-commit-lint` is the main way to interact with the program; `./php-commit-lint-commit-msg` is a wrapper for calling `php-commit-lint lint` in a convenient way for use as the git hook `.git/hooks/commit-msg`. Running `./php-commit-lint` without parameters will display a useful help screen to guide your usage.
+
+You can lint a few different ways;
+
+```sh
+cat a-test-message.txt | php-commit-lint lint
+php-commit-lint lint < a-test-message.txt
+php-commit-lint lint a-test-message.txt
+```
+
+> [!Note]
+> In all these examples you can replace `php-commit-lint lint` with `php-commit-lint-commit-msg` as these are equivalent.
+
+The `config` command is helpful in understanding the rules that are being used when run from a particular directory;
+
+```sh
+# Compact
+php-commit-lint config
+# Extremely verbose
+php-commit-lint config -tru -vvv
+```
+
+> [!Note]
+> By default it will display **u**seing rules (`-u, --using`), but can be display **t**ypes (`-y, --types`) and **r**ule sets (`-r, --rule-sets`). Adding verbosity (`-v|vv|vvv, --verbose`) will increase the amount of detail provided in each view.
+
 ## Customization
 
 The behaviour of the linter can be customized to meet specific needs through local overrides. These are files with the name `.php-commit-lint.json` which instruct the linter on, amongst other things, which rule sets to apply. When run the linter will attempt to load 2 override files;

@@ -157,7 +157,6 @@ Override files shares the same syntax as the other JSON-based configuration file
     * `ruleSets` - An **object** that maps rule set names to a rule set definition.
         * `ruleSetDefinition` - An **object** that maps rule names to a rule definition.
             * `ruleDefinition` - An **object** that describes a rule. See [Rule Definitions
-](#rule-definitions)
 
 The following contrived example demonstrates what a `.php-commit-lint.json` that has all of the above used in someway;
 

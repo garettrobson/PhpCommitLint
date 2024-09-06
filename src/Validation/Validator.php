@@ -14,10 +14,7 @@ class Validator
     public function __construct(
         protected array $rules = []
     ) {
-        usort(
-            $rules,
-            fn ($ruleA, $ruleB) => $ruleA->compare($ruleB)
-        );
+        usort($rules, fn (Rule $ruleA, Rule $ruleB) => $ruleA->compare($ruleB));
     }
 
     /**

@@ -19,7 +19,7 @@ abstract class Rule
     protected string $class;
 
     /** @var array<string, string> */
-    protected array $requiredProperties = [
+    private static array $requiredProperties = [
         'type' => 'string',
         'name' => 'string',
         'included' => 'string',
@@ -28,7 +28,7 @@ abstract class Rule
     ];
 
     /** @var array<string, string> */
-    protected array $optionalProperties = [
+    private static array $optionalProperties = [
         'pass' => 'boolean',
     ];
 
@@ -204,15 +204,15 @@ abstract class Rule
     }
 
     /** @return array<null|string> */
-    protected function getRequiredProperties(): array
+    public static function getRequiredProperties(): array
     {
-        return $this->requiredProperties;
+        return static::$requiredProperties;
     }
 
     /** @return array<null|string> */
-    protected function getOptionalProperties(): array
+    public static function getOptionalProperties(): array
     {
-        return $this->optionalProperties;
+        return static::$optionalProperties;
     }
 
     protected function getType(mixed $mixed): string

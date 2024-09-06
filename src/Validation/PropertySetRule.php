@@ -35,7 +35,7 @@ class PropertySetRule extends PropertyRule
         return $this;
     }
 
-    protected function getRequiredProperties(): array
+    public static function getRequiredProperties(): array
     {
         return array_merge(
             parent::getRequiredProperties(),

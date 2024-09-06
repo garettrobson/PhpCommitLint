@@ -15,7 +15,7 @@ abstract class PropertyRule extends Rule
         parent::__construct($definition);
     }
 
-    protected function getRequiredProperties(): array
+    public static function getRequiredProperties(): array
     {
         return array_merge(
             parent::getRequiredProperties(),

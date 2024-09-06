@@ -200,3 +200,7 @@ There are a small number of reserved keys when it comes to a rule definitions, t
 * `from` - The name of the rule set that defined this definition
 * `class` - The FQCN resolved from `types`
 * `included` - Path of the file that included this definition
+
+### Compiled rules
+
+When linting is performed a set of rules are compiled from the data collected from any included JSON files. Compilation achieved by iterating through the rule sets being used and merging their rules together. Rules added later in `using` therefor override any previously used rule of the *same name*. This final set of rules, which is effectively a unified `ruleSetDefinition`, is what the *JSON Patch functions* mutate.

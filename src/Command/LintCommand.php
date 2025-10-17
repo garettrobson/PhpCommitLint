@@ -86,7 +86,7 @@ HELP)
 
         $file = $input->getArgument('file');
         if (null == $file) {
-            if (posix_isatty(STDIN)) {
+            if ($input->isInteractive()) {
                 if ($application = $this->getApplication()) {
                     return $application->doRun(
                         new ArrayInput([

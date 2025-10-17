@@ -1,0 +1,40 @@
+name: "PHP Lint"
+
+on:
+  push:
+    paths-ignore:
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'doc/**'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: "Test"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+          - "8.3"
+          - "8.4"
+          - "nightly"
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: none
+
+      - uses: ramsey/composer-install@3.1.1
+        with:
+          composer-options: --prefer-dist --no-progress
+
+      - run: composer run test

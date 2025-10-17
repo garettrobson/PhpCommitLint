@@ -53,6 +53,7 @@ class LintCommandTest extends TestCase
             [],
             [
                 'verbosity' => OutputInterface::VERBOSITY_VERY_VERBOSE,
+                'interactive' => true,
             ]
         );
         $commandTester->assertCommandIsSuccessful();
